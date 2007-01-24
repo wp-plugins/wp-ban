@@ -96,7 +96,8 @@ function banned() {
 
 ### Function: Ban Options
 function ban_options() {
-	global $wpdb;
+	global $wpdb, $current_user;
+	$admin_login = trim($current_user->user_login);
 	// Form Processing 
 	if(!empty($_POST['do'])) {
 		switch($_POST['do']) {
@@ -119,6 +120,7 @@ function ban_options() {
 		}
 	}
 	if($_POST['Submit']) {
+		$text = '';
 		$update_ban_queries = array();
 		$update_ban_text = array();	
 		$banned_ips_post = explode("\n", trim($_POST['banned_ips']));
@@ -127,7 +129,9 @@ function ban_options() {
 		if(!empty($banned_ips_post)) {
 			$banned_ips = array();
 			foreach($banned_ips_post as $banned_ip) {
-				if($banned_ip != get_IP()) {
+				if($admin_login == 'admin' && ($banned_ip == get_IP() || is_admin_ip($banned_ip))) {
+					$text .= '<font color="blue">'.sprintf(__('This IP \'%s\' Belongs To The Admin And Will Not Be Added To Ban List', 'wp-ban'),$banned_ip).'</font><br />';
+				} else {
 					$banned_ips[] = trim($banned_ip);
 				}
 			}
@@ -135,7 +139,9 @@ function ban_options() {
 		if(!empty($banned_hosts_post)) {
 			$banned_hosts = array();
 			foreach($banned_hosts_post as $banned_host) {
-				if($banned_host != gethostbyaddr(get_IP())) {
+				if($admin_login == 'admin' && ($banned_host == gethostbyaddr(get_IP()) || is_admin_hostname($banned_host))) {
+					$text .= '<font color="blue">'.sprintf(__('This Hostname \'%s\' Belongs To The Admin Will Not Be Added To Ban List', 'wp-ban'), $banned_host).'</font><br />';
+				} else {
 					$banned_hosts[] = trim($banned_host);
 				}
 			}
@@ -147,7 +153,6 @@ function ban_options() {
 		$update_ban_text[] = __('Banned Host Names', 'wp-ban');
 		$update_ban_text[] = __('Banned Message', 'wp-ban');
 		$i=0;
-		$text = '';
 		foreach($update_ban_queries as $update_ban_query) {
 			if($update_ban_query) {
 				$text .= '<font color="green">'.$update_ban_text[$i].' '.__('Updated', 'wp-ban').'</font><br />';
@@ -180,6 +185,7 @@ function ban_options() {
 ?>
 <script type="text/javascript">
 /* <![CDATA[*/
+	var checked = 0;
 	function banned_default_templates(template) {
 		var default_template;
 		switch(template) {
@@ -188,6 +194,21 @@ function ban_options() {
 				break;
 		}
 		document.getElementById("banned_template_" + template).value = default_template;
+	}
+	function toggle_checkbox() {
+		checkboxes =  document.getElementsByName('delete_ips[]');
+		total = checkboxes.length;
+		if(checked == 0) {
+			for (var i = 0; i < total; i++) {
+				checkboxes[i].checked = true;
+			}
+			checked++;
+		} else if(checked == 1) {
+			for (var i = 0; i < total; i++) {
+				checkboxes[i].checked = false;
+			}
+			checked--;
+		}
 	}
 /* ]]> */
 </script>
@@ -199,7 +220,7 @@ function ban_options() {
 		<table width="100%" cellspacing="3" cellpadding="3" border="0">
 			<tr>
 				<td valign="top" colspan="2" align="center">
-					<?php sprintf(__('Your IP is: <strong>%s</strong><br />Your Host Name is: <strong>%s</strong>', 'wp-ban'), get_IP(), gethostbyaddr(get_IP())); ?><br />
+					<?php printf(__('Your IP is: <strong>%s</strong><br />Your Host Name is: <strong>%s</strong>', 'wp-ban'), get_IP(), gethostbyaddr(get_IP())); ?><br />
 					<?php _e('Please <strong>DO NOT</strong> ban yourself.', 'wp-ban'); ?>
 				</td>
 			</tr>
@@ -258,7 +279,7 @@ function ban_options() {
 		<tr class="thead">
 			<th width="40%">IPs</th>
 			<th width="30%">Attempts</th>
-			<th width="30%">Action</th>
+			<th width="30%"><input type="checkbox" name="toogle_checkbox" value="1" onclick="toggle_checkbox();" />&nbsp; Action</th>
 		</tr>
 			<?php
 				// Credits To Joe (Ttech) - http://blog.fileville.net/
@@ -293,6 +314,30 @@ function ban_options() {
 	</form>
 </div>
 <?php
+}
+
+
+### Function: Check Whether Or Not The IP Address Belongs To Admin
+function is_admin_ip($check) {
+	$admin_ip = get_IP();
+	$regexp = str_replace ('.', '\\.', $check);
+	$regexp = str_replace ('*', '.+', $regexp);
+	if(ereg("^$regexp$", $admin_ip)) {
+		return true;
+	}
+	return false;
+}
+
+
+### Function: Check Whether Or Not The Hostname Belongs To Admin
+function is_admin_hostname($check) {
+	$admin_hostname = gethostbyaddr(get_IP());
+	$regexp = str_replace ('.', '\\.', $check);
+	$regexp = str_replace ('*', '.+', $regexp);
+	if(ereg("^$regexp$", $admin_hostname)) {
+		return true;
+	}
+	return false;
 }
 
 

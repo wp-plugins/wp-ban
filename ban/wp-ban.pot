@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP-Ban 1.10\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-01-20 22:40+0800\n"
+"PO-Revision-Date: 2007-01-24 22:51+0800\n"
 "Last-Translator: Lester 'GaMerZ' Chan <gamerz84@hotmail.com>\n"
 "Language-Team: Lester Chan <gamerz84@hotmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -18,115 +18,125 @@ msgstr ""
 msgid "Ban"
 msgstr ""
 
-#: ban.php:104
-#: ban.php:292
+#: ban.php:105
+#: ban.php:313
 msgid "Reset Ban Stats"
 msgstr ""
 
-#: ban.php:108
+#: ban.php:109
 msgid "All IP Ban Stats And Total Ban Stat Reseted"
 msgstr ""
 
-#: ban.php:116
+#: ban.php:117
 msgid "Selected IP Ban Stats Reseted"
 msgstr ""
 
-#: ban.php:146
-#: ban.php:208
+#: ban.php:133
+#, php-format
+msgid "This IP '%s' Belongs To The Admin And Will Not Be Added To Ban List"
+msgstr ""
+
+#: ban.php:143
+#, php-format
+msgid "This Hostname '%s' Belongs To The Admin Will Not Be Added To Ban List"
+msgstr ""
+
+#: ban.php:152
+#: ban.php:229
 msgid "Banned IPs"
 msgstr ""
 
-#: ban.php:147
-#: ban.php:222
+#: ban.php:153
+#: ban.php:243
 msgid "Banned Host Names"
 msgstr ""
 
-#: ban.php:148
-#: ban.php:236
+#: ban.php:154
+#: ban.php:257
 msgid "Banned Message"
 msgstr ""
 
-#: ban.php:153
+#: ban.php:158
 msgid "Updated"
 msgstr ""
 
-#: ban.php:158
+#: ban.php:163
 msgid "No Ban Option Updated"
 msgstr ""
 
-#: ban.php:187
-#: ban.php:316
+#: ban.php:193
+#: ban.php:361
 msgid "You Are Banned."
 msgstr ""
 
-#: ban.php:197
+#: ban.php:218
 msgid "Ban Options"
 msgstr ""
 
-#: ban.php:202
+#: ban.php:223
 #, php-format
 msgid "Your IP is: <strong>%s</strong><br />Your Host Name is: <strong>%s</strong>"
 msgstr ""
 
-#: ban.php:203
+#: ban.php:224
 msgid "Please <strong>DO NOT</strong> ban yourself."
 msgstr ""
 
-#: ban.php:209
+#: ban.php:230
 msgid "Use <strong>*</strong> for wildcards."
 msgstr ""
 
-#: ban.php:210
-#: ban.php:224
+#: ban.php:231
+#: ban.php:245
 msgid "Start each entry on a new line."
 msgstr ""
 
-#: ban.php:211
-#: ban.php:225
+#: ban.php:232
+#: ban.php:246
 msgid "Examples:"
 msgstr ""
 
-#: ban.php:223
+#: ban.php:244
 msgid "Use <strong>*</strong> for wildcards"
 msgstr ""
 
-#: ban.php:237
+#: ban.php:258
 msgid "Allowed Variables:"
 msgstr ""
 
-#: ban.php:242
+#: ban.php:263
 msgid "Restore Default Template"
 msgstr ""
 
-#: ban.php:249
+#: ban.php:270
 msgid "Update Options"
 msgstr ""
 
-#: ban.php:249
+#: ban.php:270
 msgid "Cancel"
 msgstr ""
 
-#: ban.php:255
+#: ban.php:276
 msgid "Ban Stats"
 msgstr ""
 
-#: ban.php:282
+#: ban.php:303
 msgid "No Attempts"
 msgstr ""
 
-#: ban.php:287
+#: ban.php:308
 msgid "Total  Attempts:"
 msgstr ""
 
-#: ban.php:289
+#: ban.php:310
 msgid "Reset all IP ban stats and total ban stat?"
 msgstr ""
 
-#: ban.php:292
+#: ban.php:313
 msgid "You Are About To Reset Ban Stats."
 msgstr ""
 
-#: ban.php:292
+#: ban.php:313
 msgid "This Action Is Not Reversible. Are you sure?"
 msgstr ""
 
