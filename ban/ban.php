@@ -65,14 +65,14 @@ function process_ban($banarray, $against)  {
 			$regexp = str_replace ('.', '\\.', $cban);
 			$regexp = str_replace ('*', '.+', $regexp);
 			if(ereg("^$regexp$", $against)) {
-				$banned_message = stripslashes(get_settings('banned_message'));
-				$banned_message = str_replace("%SITE_NAME%", get_settings('blogname'), $banned_message);
-				$banned_message = str_replace("%SITE_URL%",  get_settings('siteurl'), $banned_message);
+				$banned_message = stripslashes(get_option('banned_message'));
+				$banned_message = str_replace("%SITE_NAME%", get_option('blogname'), $banned_message);
+				$banned_message = str_replace("%SITE_URL%",  get_option('siteurl'), $banned_message);
 				$banned_message = str_replace("%USER_IP%", get_IP(), $banned_message);
 				$banned_message = str_replace("%USER_HOSTNAME%",  gethostbyaddr(get_IP()), $banned_message);
 				echo $banned_message;
 				// Credits To Joe (Ttech) - http://blog.fileville.net/
-				$banned_stats = get_settings('banned_stats');
+				$banned_stats = get_option('banned_stats');
 				$banned_stats['count'] = (intval($banned_stats['count'])+1);
 				$banned_stats['users'][get_IP()] = intval($banned_stats['users'][get_IP()]+1);
 				update_option('banned_stats', $banned_stats);
@@ -87,8 +87,8 @@ function process_ban($banarray, $against)  {
 ### Function: Banned
 add_action('init', 'banned');
 function banned() {
-	$banned_ips = get_settings('banned_ips');
-	$banned_hosts = get_settings('banned_hosts');
+	$banned_ips = get_option('banned_ips');
+	$banned_hosts = get_option('banned_hosts');
 	process_ban($banned_ips, get_IP());
 	process_ban($banned_hosts, gethostbyaddr(get_IP()));
 }
@@ -108,7 +108,7 @@ function ban_options() {
 					update_option('banned_stats', $banned_stats);
 					$text = '<font color="green">'.__('All IP Ban Stats And Total Ban Stat Reseted', 'wp-ban').'</font>';
 				} else {
-					$banned_stats = get_settings('banned_stats');
+					$banned_stats = get_option('banned_stats');
 					$delete_ips = $_POST['delete_ips'];
 					foreach($delete_ips as $delete_ip) {
 						unset($banned_stats['users'][$delete_ip]);
@@ -164,8 +164,8 @@ function ban_options() {
 		}
 	}
 	// Get Banned IPs/Hosts
-	$banned_ips = get_settings('banned_ips');
-	$banned_hosts = get_settings('banned_hosts');
+	$banned_ips = get_option('banned_ips');
+	$banned_hosts = get_option('banned_hosts');
 	$banned_ips_display = '';
 	$banned_hosts_display = '';
 	if(!empty($banned_ips)) {
@@ -181,7 +181,7 @@ function ban_options() {
 	$banned_ips_display = trim($banned_ips_display);
 	$banned_hosts_display = trim($banned_hosts_display);
 	// Get Banned Stats
-	$banned_stats = get_settings('banned_stats');
+	$banned_stats = get_option('banned_stats');
 ?>
 <script type="text/javascript">
 /* <![CDATA[*/
@@ -190,7 +190,7 @@ function ban_options() {
 		var default_template;
 		switch(template) {
 			case "message":
-				default_template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=<?php echo get_settings('blog_charset'); ?>\" />\n<title>%SITE_NAME% - %SITE_URL%</title>\n</head>\n<body>\n<p style=\"text-align: center; font-weight: bold;\"><?php _e('You Are Banned.', 'wp-ban'); ?></p>\n</body>\n</html>";
+				default_template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=<?php echo get_option('blog_charset'); ?>\" />\n<title>%SITE_NAME% - %SITE_URL%</title>\n</head>\n<body>\n<p style=\"text-align: center; font-weight: bold;\"><?php _e('You Are Banned.', 'wp-ban'); ?></p>\n</body>\n</html>";
 				break;
 		}
 		document.getElementById("banned_template_" + template).value = default_template;
@@ -263,7 +263,7 @@ function ban_options() {
 						<input type="button" name="RestoreDefault" value="<?php _e('Restore Default Template', 'wp-ban'); ?>" onclick="javascript: banned_default_templates('message');" class="button" />
 				</td>
 				<td>
-					<textarea cols="60" rows="20" id="banned_template_message" name="banned_template_message"><?php echo stripslashes(get_settings('banned_message')); ?></textarea>
+					<textarea cols="60" rows="20" id="banned_template_message" name="banned_template_message"><?php echo stripslashes(get_option('banned_message')); ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -354,7 +354,7 @@ function ban_init() {
 	add_option('banned_message', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n".
 	'<html xmlns="http://www.w3.org/1999/xhtml">'."\n".
 	'<head>'."\n".
-	'<meta http-equiv="Content-Type" content="text/html; charset='.get_settings('blog_charset').'" />'."\n".
+	'<meta http-equiv="Content-Type" content="text/html; charset='.get_option('blog_charset').'" />'."\n".
 	'<title>%SITE_NAME% - %SITE_URL%</title>'."\n".
 	'</head>'."\n".
 	'<body>'."\n".
