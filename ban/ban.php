@@ -3,7 +3,7 @@
 Plugin Name: WP-Ban
 Plugin URI: http://www.lesterchan.net/portfolio/programming.php
 Description: Ban users by IP or host name from visiting your WordPress's blog. It will display a custom ban message when the banned IP/host name trys to visit you blog. There will be statistics recordered on how many times they attemp to visit your blog. It allows wildcard matching too.
-Version: 1.10
+Version: 1.11
 Author: GaMerZ
 Author URI: http://www.lesterchan.net
 */
@@ -69,7 +69,7 @@ function process_ban($banarray, $against)  {
 				$banned_message = str_replace("%SITE_NAME%", get_option('blogname'), $banned_message);
 				$banned_message = str_replace("%SITE_URL%",  get_option('siteurl'), $banned_message);
 				$banned_message = str_replace("%USER_IP%", get_IP(), $banned_message);
-				$banned_message = str_replace("%USER_HOSTNAME%",  gethostbyaddr(get_IP()), $banned_message);
+				$banned_message = str_replace("%USER_HOSTNAME%",  @gethostbyaddr(get_IP()), $banned_message);
 				echo $banned_message;
 				// Credits To Joe (Ttech) - http://blog.fileville.net/
 				$banned_stats = get_option('banned_stats');
@@ -90,7 +90,7 @@ function banned() {
 	$banned_ips = get_option('banned_ips');
 	$banned_hosts = get_option('banned_hosts');
 	process_ban($banned_ips, get_IP());
-	process_ban($banned_hosts, gethostbyaddr(get_IP()));
+	process_ban($banned_hosts, @gethostbyaddr(get_IP()));
 }
 
 
@@ -139,7 +139,7 @@ function ban_options() {
 		if(!empty($banned_hosts_post)) {
 			$banned_hosts = array();
 			foreach($banned_hosts_post as $banned_host) {
-				if($admin_login == 'admin' && ($banned_host == gethostbyaddr(get_IP()) || is_admin_hostname($banned_host))) {
+				if($admin_login == 'admin' && ($banned_host == @gethostbyaddr(get_IP()) || is_admin_hostname($banned_host))) {
 					$text .= '<font color="blue">'.sprintf(__('This Hostname \'%s\' Belongs To The Admin Will Not Be Added To Ban List', 'wp-ban'), $banned_host).'</font><br />';
 				} else {
 					$banned_hosts[] = trim($banned_host);
@@ -220,7 +220,7 @@ function ban_options() {
 		<table width="100%" cellspacing="3" cellpadding="3" border="0">
 			<tr>
 				<td valign="top" colspan="2" align="center">
-					<?php printf(__('Your IP is: <strong>%s</strong><br />Your Host Name is: <strong>%s</strong>', 'wp-ban'), get_IP(), gethostbyaddr(get_IP())); ?><br />
+					<?php printf(__('Your IP is: <strong>%s</strong><br />Your Host Name is: <strong>%s</strong>', 'wp-ban'), get_IP(), @gethostbyaddr(get_IP())); ?><br />
 					<?php _e('Please <strong>DO NOT</strong> ban yourself.', 'wp-ban'); ?>
 				</td>
 			</tr>
@@ -331,7 +331,7 @@ function is_admin_ip($check) {
 
 ### Function: Check Whether Or Not The Hostname Belongs To Admin
 function is_admin_hostname($check) {
-	$admin_hostname = gethostbyaddr(get_IP());
+	$admin_hostname = @gethostbyaddr(get_IP());
 	$regexp = str_replace ('.', '\\.', $check);
 	$regexp = str_replace ('*', '.+', $regexp);
 	if(ereg("^$regexp$", $admin_hostname)) {
