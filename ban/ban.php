@@ -60,7 +60,7 @@ if(!function_exists('get_IP')) {
 
 ### Function: Process Banning
 function process_ban($banarray, $against)  {
-	if(!empty($banarray)) {
+	if(!empty($banarray) && !empty($against)) {
 		foreach($banarray as $cban) {
 			$regexp = str_replace ('.', '\\.', $cban);
 			$regexp = str_replace ('*', '.+', $regexp);
