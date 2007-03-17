@@ -3,7 +3,7 @@ Contributors: GamerZ
 Donate link: http://www.lesterchan.net/wordpress
 Tags: ban, deny, denied, permission, ip, hostname, host, spam, bots, bot
 Requires at least: 2.1.0
-Stable tag: 1.11
+Stable tag: 1.10
 
 Ban users by IP or host name from visiting your WordPress's blog.
 
