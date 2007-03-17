@@ -24,7 +24,7 @@ It is the exact same readme.html is included in the zip package.
 
 == Screenshots ==
 
-[GaMerZ WordPress Plugins Screenshots](http://forums.lesterchan.net/ "GaMerZ WordPress Plugins Screenshots")
+[GaMerZ WordPress Plugins Screenshots](http://www.lesterchan.net/wordpress/screenshots/ "GaMerZ WordPress Plugins Screenshots")
 
 == Frequently Asked Questions ==
 
