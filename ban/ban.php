@@ -58,6 +58,25 @@ if(!function_exists('get_IP')) {
 }
 
 
+### Function: Print Out Banned Message
+function print_banned_message() {
+	// Credits To Joe (Ttech) - http://blog.fileville.net/
+	$banned_stats = get_option('banned_stats');
+	$banned_stats['count'] = (intval($banned_stats['count'])+1);
+	$banned_stats['users'][get_IP()] = intval($banned_stats['users'][get_IP()]+1);
+	update_option('banned_stats', $banned_stats);
+	$banned_message = stripslashes(get_option('banned_message'));
+	$banned_message = str_replace("%SITE_NAME%", get_option('blogname'), $banned_message);
+	$banned_message = str_replace("%SITE_URL%",  get_option('siteurl'), $banned_message);
+	$banned_message = str_replace("%USER_ATTEMPTS_COUNT%",  $banned_stats['users'][get_IP()], $banned_message);
+	$banned_message = str_replace("%USER_IP%", get_IP(), $banned_message);
+	$banned_message = str_replace("%USER_HOSTNAME%",  @gethostbyaddr(get_IP()), $banned_message);
+	$banned_message = str_replace("%TOTAL_ATTEMPTS_COUNT%",  $banned_stats['count'], $banned_message);				
+	echo $banned_message;
+	exit(); 
+}
+
+
 ### Function: Process Banning
 function process_ban($banarray, $against)  {
 	if(!empty($banarray) && !empty($against)) {
@@ -65,20 +84,7 @@ function process_ban($banarray, $against)  {
 			$regexp = str_replace ('.', '\\.', $cban);
 			$regexp = str_replace ('*', '.+', $regexp);
 			if(ereg("^$regexp$", $against)) {
-				// Credits To Joe (Ttech) - http://blog.fileville.net/
-				$banned_stats = get_option('banned_stats');
-				$banned_stats['count'] = (intval($banned_stats['count'])+1);
-				$banned_stats['users'][get_IP()] = intval($banned_stats['users'][get_IP()]+1);
-				update_option('banned_stats', $banned_stats);
-				$banned_message = stripslashes(get_option('banned_message'));
-				$banned_message = str_replace("%SITE_NAME%", get_option('blogname'), $banned_message);
-				$banned_message = str_replace("%SITE_URL%",  get_option('siteurl'), $banned_message);
-				$banned_message = str_replace("%USER_ATTEMPTS_COUNT%",  $banned_stats['users'][get_IP()], $banned_message);
-				$banned_message = str_replace("%USER_IP%", get_IP(), $banned_message);
-				$banned_message = str_replace("%USER_HOSTNAME%",  @gethostbyaddr(get_IP()), $banned_message);
-				$banned_message = str_replace("%TOTAL_ATTEMPTS_COUNT%",  $banned_stats['count'], $banned_message);				
-				echo $banned_message;
-				exit(); 
+				print_banned_message();
 			}
 		}
 	}
@@ -86,10 +92,27 @@ function process_ban($banarray, $against)  {
 }
 
 
+### Function: Process Banned IP Range
+function process_ban_ip_range($banned_ips_range) {
+	if(!empty($banned_ips_range)) {
+		foreach($banned_ips_range as $banned_ip_range) {
+			$range = explode('-', $banned_ip_range);
+			$range_start = trim($range[0]);
+			$range_end = trim($range[1]);
+			if(check_ip_within_range(get_IP(), $range_start, $range_end)) {
+				print_banned_message();
+				break;
+			}
+		}
+	}
+}
+
+
 ### Function: Banned
 add_action('init', 'banned');
 function banned() {
 	$banned_ips = get_option('banned_ips');
+	$banned_ips_range = get_option('banned_ips_range');
 	$banned_hosts = get_option('banned_hosts');
 	$banned_referers = get_option('banned_referers');
 	$banned_exclude_ips = get_option('banned_exclude_ips');
@@ -104,6 +127,7 @@ function banned() {
 	}
 	if(!$is_excluded) {
 		process_ban($banned_ips, get_IP());
+		process_ban_ip_range($banned_ips_range);
 		process_ban($banned_hosts, @gethostbyaddr(get_IP()));
 		process_ban($banned_referers, $_SERVER['HTTP_REFERER']);
 	}
@@ -140,6 +164,7 @@ function ban_options() {
 		$update_ban_queries = array();
 		$update_ban_text = array();	
 		$banned_ips_post = explode("\n", trim($_POST['banned_ips']));
+		$banned_ips_range_post = explode("\n", trim($_POST['banned_ips_range']));
 		$banned_hosts_post = explode("\n", trim($_POST['banned_hosts']));	
 		$banned_referers_post = explode("\n", trim($_POST['banned_referers']));
 		$banned_exclude_ips_post = explode("\n", trim($_POST['banned_exclude_ips']));
@@ -151,6 +176,19 @@ function ban_options() {
 					$text .= '<font color="blue">'.sprintf(__('This IP \'%s\' Belongs To The Admin And Will Not Be Added To Ban List', 'wp-ban'),$banned_ip).'</font><br />';
 				} else {
 					$banned_ips[] = trim($banned_ip);
+				}
+			}
+		}
+		if(!empty($banned_ips_range_post)) {
+			$banned_ips_range = array();
+			foreach($banned_ips_range_post as $banned_ip_range) {
+				$range = explode('-', $banned_ip_range);
+				$range_start = trim($range[0]);
+				$range_end = trim($range[1]);
+				if($admin_login == 'admin' && (check_ip_within_range(get_IP(), $range_start, $range_end))) {
+					$text .= '<font color="blue">'.sprintf(__('The Admin\'s IP \'%s\' Fall Within This Range (%s - %s) And Will Not Be Added To Ban List', 'wp-ban'), get_IP(), $range_start, $range_end).'</font><br />';
+				} else {
+					$banned_ips_range[] = trim($banned_ip_range);
 				}
 			}
 		}
@@ -181,11 +219,13 @@ function ban_options() {
 			}
 		}
 		$update_ban_queries[] = update_option('banned_ips', $banned_ips);
+		$update_ban_queries[] = update_option('banned_ips_range', $banned_ips_range);
 		$update_ban_queries[] = update_option('banned_hosts', $banned_hosts);
 		$update_ban_queries[] = update_option('banned_referers', $banned_referers);
 		$update_ban_queries[] = update_option('banned_exclude_ips', $banned_exclude_ips);
 		$update_ban_queries[] = update_option('banned_message', $banned_message);
 		$update_ban_text[] = __('Banned IPs', 'wp-ban');
+		$update_ban_text[] = __('Banned IP Range', 'wp-ban');
 		$update_ban_text[] = __('Banned Host Names', 'wp-ban');
 		$update_ban_text[] = __('Banned Referers', 'wp-ban');
 		$update_ban_text[] = __('Banned Excluded IPs', 'wp-ban');
@@ -203,16 +243,23 @@ function ban_options() {
 	}
 	// Get Banned IPs/Hosts
 	$banned_ips = get_option('banned_ips');
+	$banned_ips_range = get_option('banned_ips_range');
 	$banned_hosts = get_option('banned_hosts');
 	$banned_referers = get_option('banned_referers');
 	$banned_exclude_ips = get_option('banned_exclude_ips');
 	$banned_ips_display = '';
+	$banned_ips_range_display = '';
 	$banned_hosts_display = '';
 	$banned_referers_display = '';
 	$banned_exclude_ips_display = '';
 	if(!empty($banned_ips)) {
 		foreach($banned_ips as $banned_ip) {
 			$banned_ips_display .= $banned_ip."\n";
+		}
+	}
+	if(!empty($banned_ips_range)) {
+		foreach($banned_ips_range as $banned_ip_range) {
+			$banned_ips_range_display .= $banned_ip_range."\n";
 		}
 	}
 	if(!empty($banned_hosts)) {
@@ -231,6 +278,7 @@ function ban_options() {
 		}
 	}
 	$banned_ips_display = trim($banned_ips_display);
+	$banned_ips_range_display = trim($banned_ips_range_display);
 	$banned_hosts_display = trim($banned_hosts_display);
 	$banned_referers_display = trim($banned_referers_display);
 	$banned_exclude_ips_display = trim($banned_exclude_ips_display);
@@ -264,6 +312,9 @@ function ban_options() {
 			checked--;
 		}
 	}
+	function preview_bannedmessage() {
+		window.open('<?php echo get_option('siteurl').'/wp-content/plugins/ban/ban-preview.php'; ?>');
+	}
 /* ]]> */
 </script>
 <?php if(!empty($text)) { echo '<!-- Last Action --><div id="message" class="updated fade"><p>'.$text.'</p></div>'; } ?>
@@ -290,6 +341,19 @@ function ban_options() {
 				</td>
 				<td>
 					<textarea cols="40" rows="10" name="banned_ips"><?php echo $banned_ips_display; ?></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<strong><?php _e('Banned IP Range', 'wp-ban'); ?>:</strong><br />
+					<?php _e('Start each entry on a new line.', 'wp-ban'); ?><br /><br />
+					<?php _e('Examples:', 'wp-ban'); ?><br />
+					<strong>&raquo;</strong> 192.168.1.1-192.168.1.255<br /><br />
+					<?php _e('Notes:', 'wp-ban'); ?><br />
+					<strong>&raquo;</strong> <?php _e('No Wildcards Allowed.', 'wp-ban'); ?><br />
+				</td>
+				<td>
+					<textarea cols="40" rows="10" name="banned_ips_range"><?php echo $banned_ips_range_display; ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -344,7 +408,8 @@ function ban_options() {
 						- %USER_IP%<br />
 						- %USER_HOSTNAME%<br />
 						- %TOTAL_ATTEMPTS_COUNT%<br /><br />
-						<input type="button" name="RestoreDefault" value="<?php _e('Restore Default Template', 'wp-ban'); ?>" onclick="javascript: banned_default_templates('message');" class="button" />
+						<input type="button" name="RestoreDefault" value="<?php _e('Restore Default Template', 'wp-ban'); ?>" onclick="javascript: banned_default_templates('message');" class="button" /><br /><br />
+						<input type="button" name="RestoreDefault" value="<?php _e('Preview Banned Message', 'wp-ban'); ?>" onclick="javascript: preview_bannedmessage();" class="button" /><br />
 				</td>
 				<td>
 					<textarea cols="60" rows="20" id="banned_template_message" name="banned_template_message"><?php echo stripslashes(get_option('banned_message')); ?></textarea>
@@ -413,6 +478,18 @@ function is_admin_ip($check) {
 }
 
 
+### Function: Check Whether IP Within A Given IP Range
+function check_ip_within_range($ip, $range_start, $range_end) {
+	$range_start = ip2long($range_start);
+	$range_end = ip2long($range_end);
+	$ip = ip2long($ip);
+	if($ip >= $range_start && $ip <= $range_end) {
+		return true;
+	}
+	return false;
+}
+
+
 ### Function: Check Whether Or Not The Hostname Belongs To Admin
 function is_admin_hostname($check) {
 	$admin_hostname = @gethostbyaddr(get_IP());
@@ -443,6 +520,7 @@ add_action('activate_ban/ban.php', 'ban_init');
 function ban_init() {
 	global $wpdb;
 	$banned_ips = array();
+	$banned_ips_range = array();
 	$banned_hosts = array();
 	$banned_referers = array();
 	$banned_exclude_ips = array();
@@ -463,5 +541,6 @@ function ban_init() {
 	// Database Upgrade For WP-Ban 1.11
 	add_option('banned_referers', $banned_referers, 'Banned Referers');
 	add_option('banned_exclude_ips', $banned_exclude_ips, 'Banned Exclude IP');
+	add_option('banned_ips_range', $banned_ips_range, 'Banned IP Range');
 }
 ?>
