@@ -2,9 +2,9 @@
 /*
 Plugin Name: WP-Ban
 Plugin URI: http://www.lesterchan.net/portfolio/programming.php
-Description: Ban users by IP or host name from visiting your WordPress's blog. It will display a custom ban message when the banned IP/host name trys to visit you blog. There will be statistics recordered on how many times they attemp to visit your blog. It allows wildcard matching too.
+Description: Ban users by IP, IP Range, host name and referer url from visiting your WordPress's blog. It will display a custom ban message when the banned IP, IP range, host name or referer url trys to visit you blog. You can also exclude certain IPs from being banned. There will be statistics recordered on how many times they attemp to visit your blog. It allows wildcard matching too.
 Version: 1.11
-Author: GaMerZ
+Author: Lester 'GaMerZ' Chan
 Author URI: http://www.lesterchan.net
 */
 
