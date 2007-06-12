@@ -426,9 +426,9 @@ function ban_options() {
 	<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 	<table width="100%" cellspacing="3" cellpadding="3" border="0">
 		<tr class="thead">
-			<th width="40%">IPs</th>
-			<th width="30%">Attempts</th>
-			<th width="30%"><input type="checkbox" name="toogle_checkbox" value="1" onclick="toggle_checkbox();" />&nbsp; Action</th>
+			<th width="40%"><?php _e('IPs', 'wp-ban'); ?></th>
+			<th width="30%"><?php _e('Attempts', 'wp-ban'); ?></th>
+			<th width="30%"><input type="checkbox" name="toogle_checkbox" value="1" onclick="toggle_checkbox();" />&nbsp; <?php _e('Action', 'wp-ban'); ?></th>
 		</tr>
 			<?php
 				// Credits To Joe (Ttech) - http://blog.fileville.net/
