@@ -339,8 +339,8 @@ switch($mode) {
 					- %USER_IP%<br />
 					- %USER_HOSTNAME%<br />
 					- %TOTAL_ATTEMPTS_COUNT%<br /><br />
-					<input type="button" name="RestoreDefault" value="<?php _e('Restore Default Template', 'wp-ban'); ?>" onclick="javascript: banned_default_templates('message');" class="button" /><br /><br />
-					<input type="button" name="RestoreDefault" value="<?php _e('Preview Banned Message', 'wp-ban'); ?>" onclick="javascript: preview_bannedmessage();" class="button" /><br />
+					<input type="button" name="RestoreDefault" value="<?php _e('Restore Default Template', 'wp-ban'); ?>" onclick="banned_default_templates('message');" class="button" /><br /><br />
+					<input type="button" name="RestoreDefault" value="<?php _e('Preview Banned Message', 'wp-ban'); ?>" onclick="preview_bannedmessage();" class="button" /><br />
 			</td>
 			<td>
 				<textarea cols="60" rows="20" id="banned_template_message" name="banned_template_message"><?php echo stripslashes(get_option('banned_message')); ?></textarea>
