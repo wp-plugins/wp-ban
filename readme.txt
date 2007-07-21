@@ -24,8 +24,8 @@ It is the exact same readme.html is included in the zip package.
 
 == Screenshots ==
 
-[GaMerZ WordPress Plugins Screenshots](http://www.lesterchan.net/wordpress/screenshots/ "GaMerZ WordPress Plugins Screenshots")
+[WP-Ban Screenshots](http://www.lesterchan.net/wordpress/screenshots/browse/wp-ban/ "WP-Ban Screenshots")
 
 == Frequently Asked Questions ==
 
-You will need [GaMerZ WordPress Plugins Support Forums](http://forums.lesterchan.net/ "GaMerZ WordPress Plugins Support Forums")
+[WP-Ban Support Forums](http://forums.lesterchan.net/index.php?board=10.0 "WP-Ban Support Forums")
