@@ -29,7 +29,10 @@ Author URI: http://lesterchan.net
 
 
 ### Create Text Domain For Translation
-load_plugin_textdomain('wp-ban', 'wp-content/plugins/ban');
+add_action('init', 'ban_textdomain');
+function ban_textdomain() {
+	load_plugin_textdomain('wp-ban', 'wp-content/plugins/ban');
+}
 
 
 ### Function: Ban Menu
