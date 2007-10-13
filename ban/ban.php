@@ -3,7 +3,7 @@
 Plugin Name: WP-Ban
 Plugin URI: http://lesterchan.net/portfolio/programming.php
 Description: Ban users by IP, IP Range, host name and referer url from visiting your WordPress's blog. It will display a custom ban message when the banned IP, IP range, host name or referer url trys to visit you blog. You can also exclude certain IPs from being banned. There will be statistics recordered on how many times they attemp to visit your blog. It allows wildcard matching too.
-Version: 1.20
+Version: 1.21
 Author: Lester 'GaMerZ' Chan
 Author URI: http://lesterchan.net
 */
@@ -65,8 +65,8 @@ if(!function_exists('get_IP')) {
 function print_banned_message() {
 	// Credits To Joe (Ttech) - http://blog.fileville.net/
 	$banned_stats = get_option('banned_stats');
-	$banned_stats['count'] = (intval($banned_stats['count'])+1);
-	$banned_stats['users'][get_IP()] = intval($banned_stats['users'][get_IP()]+1);
+	$banned_stats['count'] = number_format_i18n(intval($banned_stats['count'])+1);
+	$banned_stats['users'][get_IP()] = number_format_i18n(intval($banned_stats['users'][get_IP()])+1);
 	update_option('banned_stats', $banned_stats);
 	$banned_message = stripslashes(get_option('banned_message'));
 	$banned_message = str_replace("%SITE_NAME%", get_option('blogname'), $banned_message);

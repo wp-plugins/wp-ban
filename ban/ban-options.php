@@ -2,7 +2,7 @@
 /*
 +----------------------------------------------------------------+
 |																							|
-|	WordPress 2.1 Plugin: WP-Ban 1.20											|
+|	WordPress 2.1 Plugin: WP-Ban 1.21											|
 |	Copyright (c) 2007 Lester "GaMerZ" Chan									|
 |																							|
 |	File Written By:																	|
@@ -374,7 +374,7 @@ switch($mode) {
 						}
 						echo "<tr $style>\n";
 						echo "<td style=\"text-align: center;\">$key</td>\n";
-						echo "<td style=\"text-align: center;\">$value</td>\n";
+						echo "<td style=\"text-align: center;\">".number_format_i18n(intval($value))."</td>\n";
 						echo "<td><input type=\"checkbox\" name=\"delete_ips[]\" value=\"$key\" />&nbsp;Reset this IP ban stat?</td>\n";
 						echo '</tr>'."\n";
 						$i++;
@@ -387,7 +387,7 @@ switch($mode) {
 			?>
 		<tr class="thead">
 			<td style="text-align: center;"><strong><?php _e('Total  Attempts:', 'wp-ban'); ?></strong></td>
-			<td style="text-align: center;"><strong><?php echo intval($banned_stats['count']); ?></strong></td>
+			<td style="text-align: center;"><strong><?php echo number_format_i18n(intval($banned_stats['count'])); ?></strong></td>
 			<td><input type="checkbox" name="reset_ban_stats" value="yes" />	&nbsp;<?php _e('Reset all IP ban stats and total ban stat?', 'wp-ban'); ?>&nbsp;</td>
 		</tr>
 	</table>

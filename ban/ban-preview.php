@@ -2,7 +2,7 @@
 /*
 +----------------------------------------------------------------+
 |																							|
-|	WordPress 2.1 Plugin: WP-Ban 1.20											|
+|	WordPress 2.1 Plugin: WP-Ban 1.21											|
 |	Copyright (c) 2007 Lester "GaMerZ" Chan									|
 |																							|
 |	File Written By:																	|
@@ -23,8 +23,8 @@ require('../../../wp-config.php');
 
 ### Display Banned Message
 $banned_stats = get_option('banned_stats');
-$banned_stats['count'] = (intval($banned_stats['count']));
-$banned_stats['users'][get_IP()] = intval($banned_stats['users'][get_IP()]);
+$banned_stats['count'] = number_format_i18n(intval($banned_stats['count']));
+$banned_stats['users'][get_IP()] = number_format_i18n(intval($banned_stats['users'][get_IP()]));
 $banned_message = stripslashes(get_option('banned_message'));
 $banned_message = str_replace("%SITE_NAME%", get_option('blogname'), $banned_message);
 $banned_message = str_replace("%SITE_URL%",  get_option('siteurl'), $banned_message);
