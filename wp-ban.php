@@ -47,10 +47,14 @@ function ban_menu() {
 ### Function: Get IP Address
 if(!function_exists('get_IP')) {
 	function get_IP() {
-		if(empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-			$ip_address = $_SERVER["REMOTE_ADDR"];
+		if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			$ip_address = $_SERVER['HTTP_CLIENT_IP'];
+		} else if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else if(!empty($_SERVER['REMOTE_ADDR'])) {
+			$ip_address = $_SERVER['REMOTE_ADDR'];
 		} else {
-			$ip_address = $_SERVER["HTTP_X_FORWARDED_FOR"];
+			$ip_address = '';
 		}
 		if(strpos($ip_address, ',') !== false) {
 			$ip_address = explode(',', $ip_address);
@@ -118,6 +122,7 @@ function banned() {
 	$banned_ips_range = get_option('banned_ips_range');
 	$banned_hosts = get_option('banned_hosts');
 	$banned_referers = get_option('banned_referers');
+	$banned_user_agents = get_option('banned_user_agents');
 	$banned_exclude_ips = get_option('banned_exclude_ips');
 	$is_excluded = false;
 	if(!empty($banned_exclude_ips)) {
@@ -133,6 +138,7 @@ function banned() {
 		process_ban_ip_range($banned_ips_range);
 		process_ban($banned_hosts, @gethostbyaddr(get_IP()));
 		process_ban($banned_referers, $_SERVER['HTTP_REFERER']);
+		process_ban($banned_user_agents, $_SERVER['HTTP_USER_AGENT']);
 	}
 }
 
@@ -154,7 +160,7 @@ function check_ip_within_range($ip, $range_start, $range_end) {
 	$range_start = ip2long($range_start);
 	$range_end = ip2long($range_end);
 	$ip = ip2long($ip);
-	if($ip >= $range_start && $ip <= $range_end) {
+	if($ip !== false && $ip >= $range_start && $ip <= $range_end) {
 		return true;
 	}
 	return false;
@@ -187,6 +193,14 @@ function is_admin_referer($check) {
 }
 
 
+### Function: Check Whether Or Not The User Agent Is Used by Admin
+function is_admin_user_agent($check) {
+	$regexp = str_replace ('.', '\\.', $check);
+	$regexp = str_replace ('*', '.+', $regexp);
+	return ereg("^$regexp$", $_SERVER['HTTP_USER_AGENT']);
+}
+
+
 ### Function: Create Ban Options
 add_action('activate_wp-ban/wp-ban.php', 'ban_init');
 function ban_init() {
@@ -214,5 +228,7 @@ function ban_init() {
 	add_option('banned_referers', $banned_referers, 'Banned Referers');
 	add_option('banned_exclude_ips', $banned_exclude_ips, 'Banned Exclude IP');
 	add_option('banned_ips_range', $banned_ips_range, 'Banned IP Range');
+	// Database Upgrade For WP-Ban 1.30
+	add_option('banned_user_agents', $banned_user_agents, 'Banned User Agents');
 }
 ?>
