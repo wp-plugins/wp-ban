@@ -345,7 +345,11 @@ switch($mode) {
 				<?php _e('Use <strong>*</strong> for wildcards', 'wp-ban'); ?>.<br />
 				<?php _e('Start each entry on a new line.', 'wp-ban'); ?><br /><br />
 				<?php _e('Examples:', 'wp-ban'); ?><br />
-				<strong>&raquo;</strong> Mozilla<br /><br />
+				<strong>&raquo;</strong> EmailSiphon*<br />
+				<strong>&raquo;</strong> LMQueueBot*<br />
+				<strong>&raquo;</strong> ContactBot*<br /><br />
+				<?php _e('Suggestions:', 'wp-ban'); ?><br />
+				<strong>&raquo;</strong> <?php _e('See <a href="http://www.user-agents.org/">http://www.user-agents.org/</a>', 'wp-ban'); ?>
 			</td>
 			<td>
 				<textarea cols="40" rows="10" name="banned_user_agents"><?php echo $banned_user_agents_display; ?></textarea>

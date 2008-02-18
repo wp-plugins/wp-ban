@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP-Ban 1.30\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2008-02-14 01:09+0800\n"
+"PO-Revision-Date: 2008-02-19 00:13+0800\n"
 "Last-Translator: Lester 'GaMerZ' Chan <gamerz84@hotmail.com>\n"
 "Language-Team: Lester Chan <gamerz84@hotmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -69,7 +69,7 @@ msgid "Banned Excluded IPs"
 msgstr ""
 
 #: ban-options.php:119
-#: ban-options.php:370
+#: ban-options.php:374
 msgid "Banned Message"
 msgstr ""
 
@@ -82,7 +82,7 @@ msgid "No Ban Option Updated"
 msgstr ""
 
 #: ban-options.php:135
-#: ban-options.php:430
+#: ban-options.php:434
 msgid "Reset Ban Stats"
 msgstr ""
 
@@ -95,7 +95,7 @@ msgid "Selected IP Ban Stats Reseted"
 msgstr ""
 
 #: ban-options.php:151
-#: ban-options.php:467
+#: ban-options.php:471
 msgid "UNINSTALL WP-Ban"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgid "Error deleting Setting Key '%s'."
 msgstr ""
 
 #: ban-options.php:185
-#: ban-options.php:437
+#: ban-options.php:441
 msgid "Uninstall WP-Ban"
 msgstr ""
 
@@ -129,7 +129,7 @@ msgid "Ban Options"
 msgstr ""
 
 #: ban-options.php:278
-#: ban-options.php:387
+#: ban-options.php:391
 msgid "Update Options &raquo;"
 msgstr ""
 
@@ -151,7 +151,7 @@ msgstr ""
 #: ban-options.php:318
 #: ban-options.php:332
 #: ban-options.php:346
-#: ban-options.php:357
+#: ban-options.php:361
 msgid "Start each entry on a new line."
 msgstr ""
 
@@ -160,18 +160,18 @@ msgstr ""
 #: ban-options.php:319
 #: ban-options.php:333
 #: ban-options.php:347
-#: ban-options.php:358
+#: ban-options.php:362
 msgid "Examples:"
 msgstr ""
 
 #: ban-options.php:307
 #: ban-options.php:335
-#: ban-options.php:360
+#: ban-options.php:364
 msgid "Notes:"
 msgstr ""
 
 #: ban-options.php:308
-#: ban-options.php:361
+#: ban-options.php:365
 msgid "No Wildcards Allowed."
 msgstr ""
 
@@ -185,87 +185,95 @@ msgstr ""
 msgid "There are ways to bypass this method of banning."
 msgstr ""
 
-#: ban-options.php:356
+#: ban-options.php:351
+msgid "Suggestions:"
+msgstr ""
+
+#: ban-options.php:352
+msgid "See <a href=\"http://www.user-agents.org/\">http://www.user-agents.org/</a>"
+msgstr ""
+
+#: ban-options.php:360
 msgid "Banned Exclude IPs"
 msgstr ""
 
-#: ban-options.php:362
+#: ban-options.php:366
 msgid "These Users Will Not Get Banned."
 msgstr ""
 
-#: ban-options.php:371
+#: ban-options.php:375
 msgid "Allowed Variables:"
 msgstr ""
 
-#: ban-options.php:378
+#: ban-options.php:382
 msgid "Restore Default Template"
 msgstr ""
 
-#: ban-options.php:379
+#: ban-options.php:383
 msgid "Preview Banned Message"
 msgstr ""
 
-#: ban-options.php:394
+#: ban-options.php:398
 msgid "Ban Stats"
 msgstr ""
 
-#: ban-options.php:397
+#: ban-options.php:401
 msgid "IPs"
 msgstr ""
 
-#: ban-options.php:398
+#: ban-options.php:402
 msgid "Attempts"
 msgstr ""
 
-#: ban-options.php:399
+#: ban-options.php:403
 msgid "Action"
 msgstr ""
 
-#: ban-options.php:420
+#: ban-options.php:424
 msgid "No Attempts"
 msgstr ""
 
-#: ban-options.php:425
+#: ban-options.php:429
 msgid "Total  Attempts:"
 msgstr ""
 
-#: ban-options.php:427
+#: ban-options.php:431
 msgid "Reset all IP ban stats and total ban stat?"
 msgstr ""
 
-#: ban-options.php:430
+#: ban-options.php:434
 msgid "You Are About To Reset Ban Stats."
 msgstr ""
 
-#: ban-options.php:430
+#: ban-options.php:434
 msgid "This Action Is Not Reversible. Are you sure?"
 msgstr ""
 
-#: ban-options.php:439
+#: ban-options.php:443
 msgid "Deactivating WP-Ban plugin does not remove any data that may have been created, such as the ban options. To completely remove this plugin, you can uninstall it here."
 msgstr ""
 
-#: ban-options.php:442
+#: ban-options.php:446
 msgid "WARNING:"
 msgstr ""
 
-#: ban-options.php:443
+#: ban-options.php:447
 msgid "Once uninstalled, this cannot be undone. You should use a Database Backup plugin of WordPress to back up all the data first."
 msgstr ""
 
-#: ban-options.php:446
+#: ban-options.php:450
 msgid "The following WordPress Options will be DELETED:"
 msgstr ""
 
-#: ban-options.php:450
+#: ban-options.php:454
 msgid "WordPress Options"
 msgstr ""
 
-#: ban-options.php:466
+#: ban-options.php:470
 msgid "Yes"
 msgstr ""
 
-#: ban-options.php:467
+#: ban-options.php:471
 msgid ""
 "You Are About To Uninstall WP-Ban From WordPress.\\n"
 "This Action Is Not Reversible.\\n"
