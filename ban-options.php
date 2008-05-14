@@ -2,8 +2,8 @@
 /*
 +----------------------------------------------------------------+
 |																							|
-|	WordPress 2.1 Plugin: WP-Ban 1.30											|
-|	Copyright (c) 2007 Lester "GaMerZ" Chan									|
+|	WordPress 2.5 Plugin: WP-Ban 1.30											|
+|	Copyright (c) 2008 Lester "GaMerZ" Chan									|
 |																							|
 |	File Written By:																	|
 |	- Lester "GaMerZ" Chan															|
@@ -274,10 +274,7 @@ switch($mode) {
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 <div class="wrap">
 	<h2><?php _e('Ban Options', 'wp-ban'); ?></h2>
-	<p class="submit">
-		<input type="submit" name="Submit" class="button" value="<?php _e('Update Options &raquo;', 'wp-ban'); ?>" />
-	</p>
-	<table width="100%" cellspacing="3" cellpadding="3" border="0">
+	<table class="form-table">
 		<tr>
 			<td valign="top" colspan="2" align="center">
 				<?php printf(__('Your IP is: <strong>%s</strong><br />Your Host Name is: <strong>%s</strong><br />Your Site URL is: <strong>%s</strong>', 'wp-ban'), get_IP(), @gethostbyaddr(get_IP()), get_option('siteurl')); ?><br />
@@ -388,34 +385,39 @@ switch($mode) {
 		</tr>
 	</table>
 	<p class="submit">
-		<input type="submit" name="Submit" class="button" value="<?php _e('Update Options &raquo;', 'wp-ban'); ?>" />
+		<input type="submit" name="Submit" class="button" value="<?php _e('Save Changes', 'wp-ban'); ?>" />
 	</p>
 </div>
 </form>
+<p>&nbsp;</p>
 
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 <div class="wrap">
 	<h2><?php _e('Ban Stats', 'wp-ban'); ?></h2>
-	<table width="100%" cellspacing="3" cellpadding="3" border="0">
-		<tr class="thead">
-			<th width="40%"><?php _e('IPs', 'wp-ban'); ?></th>
-			<th width="30%"><?php _e('Attempts', 'wp-ban'); ?></th>
-			<th width="30%"><input type="checkbox" name="toogle_checkbox" value="1" onclick="toggle_checkbox();" />&nbsp; <?php _e('Action', 'wp-ban'); ?></th>
-		</tr>
+	<br style="clear" />
+	<table class="widefat">
+		<thead>
+			<tr>
+				<th width="40%"><?php _e('IPs', 'wp-ban'); ?></th>
+				<th width="30%"><?php _e('Attempts', 'wp-ban'); ?></th>
+				<th width="30%"><input type="checkbox" id="toogle_checkbox" name="toogle_checkbox" value="1" onclick="toggle_checkbox();" />&nbsp;<label for="toogle_checkbox"><?php _e('Action', 'wp-ban'); ?></label></th>
+			</tr>
+		</thead>
 			<?php
 				// Credits To Joe (Ttech) - http://blog.fileville.net/
 				if(!empty($banned_stats['users'])) {
 					$i = 0;
+					ksort($banned_stats['users']);
 					foreach($banned_stats['users'] as $key => $value) {
 						if($i%2 == 0) {
-							$style = 'style=\'background-color: #eee\'';
+							$style = '';
 						}  else {
-							$style = 'style=\'background-color: none\'';
+							$style = ' class="alternate"';
 						}
-						echo "<tr $style>\n";
+						echo "<tr$style>\n";
 						echo "<td style=\"text-align: center;\">$key</td>\n";
 						echo "<td style=\"text-align: center;\">".number_format_i18n(intval($value))."</td>\n";
-						echo "<td><input type=\"checkbox\" name=\"delete_ips[]\" value=\"$key\" />&nbsp;Reset this IP ban stat?</td>\n";
+						echo "<td><input type=\"checkbox\" id=\"ban-$i\" name=\"delete_ips[]\" value=\"$key\" />&nbsp;<label for=\"ban-$i\">Reset this IP ban stat?</label></td>\n";
 						echo '</tr>'."\n";
 						$i++;
 					}
@@ -428,12 +430,13 @@ switch($mode) {
 		<tr class="thead">
 			<td style="text-align: center;"><strong><?php _e('Total  Attempts:', 'wp-ban'); ?></strong></td>
 			<td style="text-align: center;"><strong><?php echo number_format_i18n(intval($banned_stats['count'])); ?></strong></td>
-			<td><input type="checkbox" name="reset_ban_stats" value="yes" />	&nbsp;<?php _e('Reset all IP ban stats and total ban stat?', 'wp-ban'); ?>&nbsp;</td>
+			<td><input type="checkbox" id="reset_ban_stats" name="reset_ban_stats" value="yes" />&nbsp;<label for="reset_ban_stats"><?php _e('Reset all IP ban stats and total ban stat?', 'wp-ban'); ?></label></td>
 		</tr>
 	</table>
 	<p style="text-align: center;"><input type="submit" name="do" value="<?php _e('Reset Ban Stats', 'wp-ban'); ?>" class="button" onclick="return confirm('<?php _e('You Are About To Reset Ban Stats.', 'wp-ban'); ?>\n\n<?php _e('This Action Is Not Reversible. Are you sure?', 'wp-ban'); ?>')" /></p>
 </div>
 </form>
+<p>&nbsp;</p>
 
 <!-- Uninstall WP-Ban -->
 <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"> 
@@ -449,12 +452,14 @@ switch($mode) {
 	<p style="text-align: left; color: red">
 		<strong><?php _e('The following WordPress Options will be DELETED:', 'wp-ban'); ?></strong><br />
 	</p>
-	<table width="70%"  border="0" cellspacing="3" cellpadding="3">
-		<tr class="thead">
-			<td align="center"><strong><?php _e('WordPress Options', 'wp-ban'); ?></strong></td>
-		</tr>
+	<table class="widefat">
+		<thead>
+			<tr>
+				<th><?php _e('WordPress Options', 'wp-ban'); ?></th>
+			</tr>
+		</thead>
 		<tr>
-			<td valign="top" style="background-color: #eee;">
+			<td valign="top">
 				<ol>
 				<?php
 					foreach($ban_settings as $settings) {
