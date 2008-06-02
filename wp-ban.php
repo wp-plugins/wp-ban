@@ -69,16 +69,16 @@ if(!function_exists('get_IP')) {
 function print_banned_message() {
 	// Credits To Joe (Ttech) - http://blog.fileville.net/
 	$banned_stats = get_option('banned_stats');
-	$banned_stats['count'] = number_format_i18n(intval($banned_stats['count'])+1);
-	$banned_stats['users'][get_IP()] = number_format_i18n(intval($banned_stats['users'][get_IP()])+1);
+	$banned_stats['count'] = intval($banned_stats['count']) + 1;
+	$banned_stats['users'][get_IP()] = intval($banned_stats['users'][get_IP()]) + 1;
 	update_option('banned_stats', $banned_stats);
 	$banned_message = stripslashes(get_option('banned_message'));
 	$banned_message = str_replace("%SITE_NAME%", get_option('blogname'), $banned_message);
 	$banned_message = str_replace("%SITE_URL%",  get_option('siteurl'), $banned_message);
-	$banned_message = str_replace("%USER_ATTEMPTS_COUNT%",  $banned_stats['users'][get_IP()], $banned_message);
+	$banned_message = str_replace("%USER_ATTEMPTS_COUNT%",  number_format_i18n($banned_stats['users'][get_IP()]), $banned_message);
 	$banned_message = str_replace("%USER_IP%", get_IP(), $banned_message);
 	$banned_message = str_replace("%USER_HOSTNAME%",  @gethostbyaddr(get_IP()), $banned_message);
-	$banned_message = str_replace("%TOTAL_ATTEMPTS_COUNT%",  $banned_stats['count'], $banned_message);				
+	$banned_message = str_replace("%TOTAL_ATTEMPTS_COUNT%", number_format_i18n($banned_stats['count']), $banned_message);				
 	echo $banned_message;
 	exit(); 
 }
