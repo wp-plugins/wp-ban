@@ -2,7 +2,7 @@
 /*
 +----------------------------------------------------------------+
 |																							|
-|	WordPress 2.5 Plugin: WP-Ban 1.30											|
+|	WordPress 2.5 Plugin: WP-Ban 1.31											|
 |	Copyright (c) 2008 Lester "GaMerZ" Chan									|
 |																							|
 |	File Written By:																	|
@@ -18,7 +18,12 @@
 
 
 ### Require wp-config.php
-require('../../../wp-config.php');
+$wp_root = dirname(dirname(dirname(dirname(__FILE__))));
+if (file_exists($wp_root.'/wp-load.php')) {
+	require_once($wp_root.'/wp-load.php');
+} else {
+	require_once($wp_root.'/wp-config.php');
+}
 
 
 ### Display Banned Message

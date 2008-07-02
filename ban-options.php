@@ -2,7 +2,7 @@
 /*
 +----------------------------------------------------------------+
 |																							|
-|	WordPress 2.5 Plugin: WP-Ban 1.30											|
+|	WordPress 2.5 Plugin: WP-Ban 1.31											|
 |	Copyright (c) 2008 Lester "GaMerZ" Chan									|
 |																							|
 |	File Written By:																	|
@@ -265,7 +265,7 @@ switch($mode) {
 		}
 	}
 	function preview_bannedmessage() {
-		window.open('<?php echo get_option('siteurl').'/wp-content/plugins/wp-ban/ban-preview.php'; ?>');
+		window.open('<?php echo WP_PLUGIN_URL.'/wp-ban/ban-preview.php'; ?>');
 	}
 /* ]]> */
 </script>

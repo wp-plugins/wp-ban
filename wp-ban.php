@@ -3,7 +3,7 @@
 Plugin Name: WP-Ban
 Plugin URI: http://lesterchan.net/portfolio/programming/php/
 Description: Ban users by IP, IP Range, host name, user agent and referer url from visiting your WordPress's blog. It will display a custom ban message when the banned IP, IP range, host name, user agent or referer url tries to visit you blog. You can also exclude certain IPs from being banned. There will be statistics recordered on how many times they attemp to visit your blog. It allows wildcard matching too.
-Version: 1.30
+Version: 1.31
 Author: Lester 'GaMerZ' Chan
 Author URI: http://lesterchan.net
 */
@@ -28,10 +28,29 @@ Author URI: http://lesterchan.net
 */
 
 
+### Use WordPress 2.6 Constants
+if (!defined('WP_CONTENT_DIR')) {
+	define( 'WP_CONTENT_DIR', ABSPATH.'wp-content');
+}
+if (!defined('WP_CONTENT_URL')) {
+	define('WP_CONTENT_URL', get_option('siteurl').'/wp-content');
+}
+if (!defined('WP_PLUGIN_DIR')) {
+	define('WP_PLUGIN_DIR', WP_CONTENT_DIR.'/plugins');
+}
+if (!defined('WP_PLUGIN_URL')) {
+	define('WP_PLUGIN_URL', WP_CONTENT_URL.'/plugins');
+}
+
+
 ### Create Text Domain For Translation
 add_action('init', 'ban_textdomain');
 function ban_textdomain() {
-	load_plugin_textdomain('wp-ban', 'wp-content/plugins/wp-ban');
+	if (!function_exists('wp_print_styles')) {
+		load_plugin_textdomain('wp-ban', 'wp-content/plugins/wp-ban');
+	} else {
+		load_plugin_textdomain('wp-ban', false, 'wp-ban');
+	}
 }
 
 

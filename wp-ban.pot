@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WP-Ban 1.30\n"
+"Project-Id-Version: WP-Ban 1.31\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-30 02:01+0800\n"
-"PO-Revision-Date: 2008-05-30 02:01+0800\n"
+"POT-Creation-Date: 2008-07-03 02:24+0800\n"
+"PO-Revision-Date: 2008-07-03 02:24+0800\n"
 "Last-Translator: Lester Chan <lesterchan@gmail.com>\n"
 "Language-Team: Lester Chan <gamerz84@hotmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -121,7 +121,7 @@ msgid "<a href=\"%s\">Click Here</a> To Finish The Uninstallation And WP-Ban Wil
 msgstr ""
 
 #: ban-options.php:247
-#: wp-ban.php:224
+#: wp-ban.php:243
 msgid "You Are Banned."
 msgstr ""
 
@@ -281,7 +281,7 @@ msgid ""
 " Choose [Cancel] To Stop, [OK] To Uninstall."
 msgstr ""
 
-#: wp-ban.php:42
+#: wp-ban.php:61
 msgid "Ban"
 msgstr ""
 
