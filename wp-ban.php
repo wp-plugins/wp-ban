@@ -137,6 +137,10 @@ function process_ban_ip_range($banned_ips_range) {
 ### Function: Banned
 add_action('init', 'banned');
 function banned() {
+	$ip = get_IP();
+	if($ip == 'unknown') {
+		return;
+	}
 	$banned_ips = get_option('banned_ips');
 	$banned_ips_range = get_option('banned_ips_range');
 	$banned_hosts = get_option('banned_hosts');
@@ -146,16 +150,16 @@ function banned() {
 	$is_excluded = false;
 	if(!empty($banned_exclude_ips)) {
 		foreach($banned_exclude_ips as $banned_exclude_ip) {
-			if(get_IP() == $banned_exclude_ip) {
+			if($ip == $banned_exclude_ip) {
 				$is_excluded = true;
 				break;
 			}
 		}
 	}
 	if(!$is_excluded) {
-		process_ban($banned_ips, get_IP());
+		process_ban($banned_ips, $ip);
 		process_ban_ip_range($banned_ips_range);
-		process_ban($banned_hosts, @gethostbyaddr(get_IP()));
+		process_ban($banned_hosts, @gethostbyaddr($ip));
 		process_ban($banned_referers, $_SERVER['HTTP_REFERER']);
 		process_ban($banned_user_agents, $_SERVER['HTTP_USER_AGENT']);
 	}
