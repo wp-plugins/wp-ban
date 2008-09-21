@@ -3,7 +3,7 @@
 Plugin Name: WP-Ban
 Plugin URI: http://lesterchan.net/portfolio/programming/php/
 Description: Ban users by IP, IP Range, host name, user agent and referer url from visiting your WordPress's blog. It will display a custom ban message when the banned IP, IP range, host name, user agent or referer url tries to visit you blog. You can also exclude certain IPs from being banned. There will be statistics recordered on how many times they attemp to visit your blog. It allows wildcard matching too.
-Version: 1.31
+Version: 1.40
 Author: Lester 'GaMerZ' Chan
 Author URI: http://lesterchan.net
 */
@@ -28,29 +28,10 @@ Author URI: http://lesterchan.net
 */
 
 
-### Use WordPress 2.6 Constants
-if (!defined('WP_CONTENT_DIR')) {
-	define( 'WP_CONTENT_DIR', ABSPATH.'wp-content');
-}
-if (!defined('WP_CONTENT_URL')) {
-	define('WP_CONTENT_URL', get_option('siteurl').'/wp-content');
-}
-if (!defined('WP_PLUGIN_DIR')) {
-	define('WP_PLUGIN_DIR', WP_CONTENT_DIR.'/plugins');
-}
-if (!defined('WP_PLUGIN_URL')) {
-	define('WP_PLUGIN_URL', WP_CONTENT_URL.'/plugins');
-}
-
-
 ### Create Text Domain For Translation
 add_action('init', 'ban_textdomain');
 function ban_textdomain() {
-	if (!function_exists('wp_print_styles')) {
-		load_plugin_textdomain('wp-ban', 'wp-content/plugins/wp-ban');
-	} else {
-		load_plugin_textdomain('wp-ban', false, 'wp-ban');
-	}
+	load_plugin_textdomain('wp-ban', false, 'wp-ban');
 }
 
 
@@ -223,11 +204,21 @@ function is_admin_user_agent($check) {
 	return ereg("^$regexp$", $_SERVER['HTTP_USER_AGENT']);
 }
 
+### Function: Returns page's language attributes depends on WordPress language
+function get_language_attributes($doctype = 'html') {
+	ob_start();
+	language_attributes();
+	$language_attributes = ob_get_contents();
+	ob_end_clean();
+	return $language_attributes;
+}
+
 
 ### Function: Create Ban Options
 add_action('activate_wp-ban/wp-ban.php', 'ban_init');
 function ban_init() {
 	global $wpdb;
+	ban_textdomain();
 	$banned_ips = array();
 	$banned_ips_range = array();
 	$banned_hosts = array();
@@ -238,7 +229,7 @@ function ban_init() {
 	add_option('banned_hosts', $banned_hosts, 'Banned Hosts');
 	add_option('banned_stats', $banned_stats, 'WP-Ban Stats');
 	add_option('banned_message', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n".
-	'<html xmlns="http://www.w3.org/1999/xhtml">'."\n".
+	'<html xmlns="http://www.w3.org/1999/xhtml" '.get_language_attributes().'>'."\n".
 	'<head>'."\n".
 	'<meta http-equiv="Content-Type" content="text/html; charset='.get_option('blog_charset').'" />'."\n".
 	'<title>%SITE_NAME% - %SITE_URL%</title>'."\n".

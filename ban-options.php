@@ -2,7 +2,7 @@
 /*
 +----------------------------------------------------------------+
 |																							|
-|	WordPress 2.5 Plugin: WP-Ban 1.31											|
+|	WordPress 2.6 Plugin: WP-Ban 1.40											|
 |	Copyright (c) 2008 Lester "GaMerZ" Chan									|
 |																							|
 |	File Written By:																	|
@@ -139,7 +139,7 @@ if(!empty($_POST['do'])) {
 				$text = '<font color="green">'.__('All IP Ban Stats And Total Ban Stat Reseted', 'wp-ban').'</font>';
 			} else {
 				$banned_stats = get_option('banned_stats');
-				$delete_ips = $_POST['delete_ips'];
+				$delete_ips = (array) $_POST['delete_ips'];
 				foreach($delete_ips as $delete_ip) {
 					unset($banned_stats['users'][$delete_ip]);
 				}
@@ -244,7 +244,7 @@ switch($mode) {
 		var default_template;
 		switch(template) {
 			case "message":
-				default_template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=<?php echo get_option('blog_charset'); ?>\" />\n<title>%SITE_NAME% - %SITE_URL%</title>\n</head>\n<body>\n<p style=\"text-align: center; font-weight: bold;\"><?php _e('You Are Banned.', 'wp-ban'); ?></p>\n</body>\n</html>";
+				default_template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" <?php echo str_replace('"', '\"', get_language_attributes()); ?>>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=<?php echo get_option('blog_charset'); ?>\" />\n<title>%SITE_NAME% - %SITE_URL%</title>\n</head>\n<body>\n<p style=\"text-align: center; font-weight: bold;\"><?php _e('You Are Banned.', 'wp-ban'); ?></p>\n</body>\n</html>";
 				break;
 		}
 		document.getElementById("banned_template_" + template).value = default_template;
@@ -286,13 +286,13 @@ switch($mode) {
 				<strong><?php _e('Banned IPs', 'wp-ban'); ?>:</strong><br />
 				<?php _e('Use <strong>*</strong> for wildcards.', 'wp-ban'); ?><br />
 				<?php _e('Start each entry on a new line.', 'wp-ban'); ?><br /><br />
-				<?php _e('Examples:', 'wp-ban'); ?><br />
-				<strong>&raquo;</strong> 192.168.1.100<br />
-				<strong>&raquo;</strong> 192.168.1.*<br />
-				<strong>&raquo;</strong> 192.168.*.*<br />
+				<?php _e('Examples:', 'wp-ban'); ?>
+				<p style="margin: 2px 0"><strong>&raquo;</strong> <span dir="ltr">192.168.1.100</span></p>
+				<p style="margin: 2px 0"><strong>&raquo;</strong> <span dir="ltr">192.168.1.*</span></p>
+				<p style="margin: 2px 0"><strong>&raquo;</strong> <span dir="ltr">192.168.*.*</span></p>
 			</td>
 			<td>
-				<textarea cols="40" rows="10" name="banned_ips"><?php echo $banned_ips_display; ?></textarea>
+				<textarea cols="40" rows="10" name="banned_ips" dir="ltr"><?php echo $banned_ips_display; ?></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -300,12 +300,12 @@ switch($mode) {
 				<strong><?php _e('Banned IP Range', 'wp-ban'); ?>:</strong><br />
 				<?php _e('Start each entry on a new line.', 'wp-ban'); ?><br /><br />
 				<?php _e('Examples:', 'wp-ban'); ?><br />
-				<strong>&raquo;</strong> 192.168.1.1-192.168.1.255<br /><br />
+				<strong>&raquo;</strong> <span dir="ltr">192.168.1.1-192.168.1.255</span><br /><br />
 				<?php _e('Notes:', 'wp-ban'); ?><br />
 				<strong>&raquo;</strong> <?php _e('No Wildcards Allowed.', 'wp-ban'); ?><br />
 			</td>
 			<td>
-				<textarea cols="40" rows="10" name="banned_ips_range"><?php echo $banned_ips_range_display; ?></textarea>
+				<textarea cols="40" rows="10" name="banned_ips_range" dir="ltr"><?php echo $banned_ips_range_display; ?></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -313,13 +313,13 @@ switch($mode) {
 				<strong><?php _e('Banned Host Names', 'wp-ban'); ?>:</strong><br />
 				<?php _e('Use <strong>*</strong> for wildcards', 'wp-ban'); ?>.<br />
 				<?php _e('Start each entry on a new line.', 'wp-ban'); ?><br /><br />
-				<?php _e('Examples:', 'wp-ban'); ?><br />
-				<strong>&raquo;</strong> *.sg<br />
-				<strong>&raquo;</strong> *.cn<br />
-				<strong>&raquo;</strong> *.th<br />
+				<?php _e('Examples:', 'wp-ban'); ?>
+				<p style="margin: 2px 0"><strong>&raquo;</strong> <span dir="ltr">*.sg</span></p>
+				<p style="margin: 2px 0"><strong>&raquo;</strong> <span dir="ltr">*.cn</span></p>
+				<p style="margin: 2px 0"><strong>&raquo;</strong> <span dir="ltr">*.th</span></p>
 			</td>
 			<td>
-				<textarea cols="40" rows="10" name="banned_hosts"><?php echo $banned_hosts_display; ?></textarea>
+				<textarea cols="40" rows="10" name="banned_hosts" dir="ltr"><?php echo $banned_hosts_display; ?></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -328,12 +328,12 @@ switch($mode) {
 				<?php _e('Use <strong>*</strong> for wildcards', 'wp-ban'); ?>.<br />
 				<?php _e('Start each entry on a new line.', 'wp-ban'); ?><br /><br />
 				<?php _e('Examples:', 'wp-ban'); ?><br />
-				<strong>&raquo;</strong> http://*.blogspot.com<br /><br />
+				<strong>&raquo;</strong> <span dir="ltr">http://*.blogspot.com</span><br /><br />
 				<?php _e('Notes:', 'wp-ban'); ?><br />
 				<strong>&raquo;</strong> <?php _e('There are ways to bypass this method of banning.', 'wp-ban'); ?>
 			</td>
 			<td>
-				<textarea cols="40" rows="10" name="banned_referers"><?php echo $banned_referers_display; ?></textarea>
+				<textarea cols="40" rows="10" name="banned_referers" dir="ltr"><?php echo $banned_referers_display; ?></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -341,15 +341,15 @@ switch($mode) {
 				<strong><?php _e('Banned User Agents', 'wp-ban'); ?>:</strong><br />
 				<?php _e('Use <strong>*</strong> for wildcards', 'wp-ban'); ?>.<br />
 				<?php _e('Start each entry on a new line.', 'wp-ban'); ?><br /><br />
-				<?php _e('Examples:', 'wp-ban'); ?><br />
-				<strong>&raquo;</strong> EmailSiphon*<br />
-				<strong>&raquo;</strong> LMQueueBot*<br />
-				<strong>&raquo;</strong> ContactBot*<br /><br />
+				<?php _e('Examples:', 'wp-ban'); ?>
+				<p style="margin: 2px 0"><strong>&raquo;</strong> <span dir="ltr">EmailSiphon*</span></p>
+				<p style="margin: 2px 0"><strong>&raquo;</strong> <span dir="ltr">LMQueueBot*</span></p>
+				<p style="margin: 2px 0"><strong>&raquo;</strong> <span dir="ltr">ContactBot*</span></p>
 				<?php _e('Suggestions:', 'wp-ban'); ?><br />
 				<strong>&raquo;</strong> <?php _e('See <a href="http://www.user-agents.org/">http://www.user-agents.org/</a>', 'wp-ban'); ?>
 			</td>
 			<td>
-				<textarea cols="40" rows="10" name="banned_user_agents"><?php echo $banned_user_agents_display; ?></textarea>
+				<textarea cols="40" rows="10" name="banned_user_agents" dir="ltr"><?php echo $banned_user_agents_display; ?></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -357,25 +357,25 @@ switch($mode) {
 				<strong><?php _e('Banned Exclude IPs', 'wp-ban'); ?>:</strong><br />
 				<?php _e('Start each entry on a new line.', 'wp-ban'); ?><br /><br />
 				<?php _e('Examples:', 'wp-ban'); ?><br />
-				<strong>&raquo;</strong> 192.168.1.100<br /><br />
+				<strong>&raquo;</strong> <span dir="ltr">192.168.1.100</span><br /><br />
 				<?php _e('Notes:', 'wp-ban'); ?><br />
 				<strong>&raquo;</strong> <?php _e('No Wildcards Allowed.', 'wp-ban'); ?><br />
 				<strong>&raquo;</strong> <?php _e('These Users Will Not Get Banned.', 'wp-ban'); ?>
 			</td>
 			<td>
-				<textarea cols="40" rows="10" name="banned_exclude_ips"><?php echo $banned_exclude_ips_display; ?></textarea>
+				<textarea cols="40" rows="10" name="banned_exclude_ips" dir="ltr"><?php echo $banned_exclude_ips_display; ?></textarea>
 			</td>
 		</tr>
 		<tr>
 			<td valign="top">
 				<strong><?php _e('Banned Message', 'wp-ban'); ?>:</strong><br /><br /><br />
-					<?php _e('Allowed Variables:', 'wp-ban'); ?><br />
-					- %SITE_NAME%<br />
-					- %SITE_URL%<br />
-					- %USER_ATTEMPTS_COUNT%<br />
-					- %USER_IP%<br />
-					- %USER_HOSTNAME%<br />
-					- %TOTAL_ATTEMPTS_COUNT%<br /><br />
+					<?php _e('Allowed Variables:', 'wp-ban'); ?>
+					<p style="margin: 2px 0">- %SITE_NAME%</p>
+					<p style="margin: 2px 0">- %SITE_URL%</p>
+					<p style="margin: 2px 0">- %USER_ATTEMPTS_COUNT%</p>
+					<p style="margin: 2px 0">- %USER_IP%<br />
+					<p style="margin: 2px 0">- %USER_HOSTNAME%<br />
+					<p style="margin: 2px 0">- %TOTAL_ATTEMPTS_COUNT%</p><br />
 					<input type="button" name="RestoreDefault" value="<?php _e('Restore Default Template', 'wp-ban'); ?>" onclick="banned_default_templates('message');" class="button" /><br /><br />
 					<input type="button" name="RestoreDefault" value="<?php _e('Preview Banned Message', 'wp-ban'); ?>" onclick="preview_bannedmessage();" class="button" /><br />
 			</td>
@@ -398,8 +398,8 @@ switch($mode) {
 	<table class="widefat">
 		<thead>
 			<tr>
-				<th width="40%"><?php _e('IPs', 'wp-ban'); ?></th>
-				<th width="30%"><?php _e('Attempts', 'wp-ban'); ?></th>
+				<th width="40%" style="text-align: center;"><?php _e('IPs', 'wp-ban'); ?></th>
+				<th width="30%" style="text-align: center;"><?php _e('Attempts', 'wp-ban'); ?></th>
 				<th width="30%"><input type="checkbox" id="toogle_checkbox" name="toogle_checkbox" value="1" onclick="toggle_checkbox();" />&nbsp;<label for="toogle_checkbox"><?php _e('Action', 'wp-ban'); ?></label></th>
 			</tr>
 		</thead>
@@ -417,7 +417,7 @@ switch($mode) {
 						echo "<tr$style>\n";
 						echo "<td style=\"text-align: center;\">$key</td>\n";
 						echo "<td style=\"text-align: center;\">".number_format_i18n(intval($value))."</td>\n";
-						echo "<td><input type=\"checkbox\" id=\"ban-$i\" name=\"delete_ips[]\" value=\"$key\" />&nbsp;<label for=\"ban-$i\">Reset this IP ban stat?</label></td>\n";
+						echo "<td><input type=\"checkbox\" id=\"ban-$i\" name=\"delete_ips[]\" value=\"$key\" />&nbsp;<label for=\"ban-$i\">".__('Reset this IP ban stat?', 'wp-ban')."</label></td>\n";
 						echo '</tr>'."\n";
 						$i++;
 					}
@@ -442,14 +442,14 @@ switch($mode) {
 <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"> 
 <div class="wrap"> 
 	<h2><?php _e('Uninstall WP-Ban', 'wp-ban'); ?></h2>
-	<p style="text-align: left;">
+	<p>
 		<?php _e('Deactivating WP-Ban plugin does not remove any data that may have been created, such as the ban options. To completely remove this plugin, you can uninstall it here.', 'wp-ban'); ?>
 	</p>
-	<p style="text-align: left; color: red">
+	<p style="color: red">
 		<strong><?php _e('WARNING:', 'wp-ban'); ?></strong><br />
 		<?php _e('Once uninstalled, this cannot be undone. You should use a Database Backup plugin of WordPress to back up all the data first.', 'wp-ban'); ?>
 	</p>
-	<p style="text-align: left; color: red">
+	<p style="color: red">
 		<strong><?php _e('The following WordPress Options will be DELETED:', 'wp-ban'); ?></strong><br />
 	</p>
 	<table class="widefat">
