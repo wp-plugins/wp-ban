@@ -39,7 +39,7 @@ function ban_textdomain() {
 add_action('admin_menu', 'ban_menu');
 function ban_menu() {
 	if (function_exists('add_management_page')) {
-		add_management_page(__('Ban', 'wp-ban'), __('Ban', 'wp-ban'), 'manage_options', 'wp-ban/ban-options.php');
+		add_options_page(__('Ban', 'wp-ban'), __('Ban', 'wp-ban'), 'manage_options', 'wp-ban/ban-options.php');
 	}
 }
 

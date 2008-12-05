@@ -273,6 +273,7 @@ switch($mode) {
 <!-- Ban Options -->
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 <div class="wrap">
+	<?php screen_icon(); ?>
 	<h2><?php _e('Ban Options', 'wp-ban'); ?></h2>
 	<table class="form-table">
 		<tr>
@@ -393,7 +394,7 @@ switch($mode) {
 
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 <div class="wrap">
-	<h2><?php _e('Ban Stats', 'wp-ban'); ?></h2>
+	<h3><?php _e('Ban Stats', 'wp-ban'); ?></h3>
 	<br style="clear" />
 	<table class="widefat">
 		<thead>
@@ -441,7 +442,7 @@ switch($mode) {
 <!-- Uninstall WP-Ban -->
 <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"> 
 <div class="wrap"> 
-	<h2><?php _e('Uninstall WP-Ban', 'wp-ban'); ?></h2>
+	<h3><?php _e('Uninstall WP-Ban', 'wp-ban'); ?></h3>
 	<p>
 		<?php _e('Deactivating WP-Ban plugin does not remove any data that may have been created, such as the ban options. To completely remove this plugin, you can uninstall it here.', 'wp-ban'); ?>
 	</p>
