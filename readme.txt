@@ -2,8 +2,8 @@
 Contributors: GamerZ
 Donate link: http://lesterchan.net/wordpress
 Tags: banned, ban, deny, denied, permission, ip, hostname, host, spam, bots, bot, exclude, referer, url, referral, range
-Requires at least: 2.5.0
-Stable tag: 1.31
+Requires at least: 2.7.0
+Stable tag: 1.40
 
 Ban users by IP, IP Range, host name and referer url from visiting your WordPress's blog.
 
