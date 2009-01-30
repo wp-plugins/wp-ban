@@ -2,7 +2,7 @@
 /*
 +----------------------------------------------------------------+
 |																							|
-|	WordPress 2.6 Plugin: WP-Ban 1.40											|
+|	WordPress 2.6 Plugin: WP-Ban 1.50											|
 |	Copyright (c) 2008 Lester "GaMerZ" Chan									|
 |																							|
 |	File Written By:																	|
@@ -247,21 +247,20 @@ switch($mode) {
 				default_template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" <?php echo str_replace('"', '\"', get_language_attributes()); ?>>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=<?php echo get_option('blog_charset'); ?>\" />\n<title>%SITE_NAME% - %SITE_URL%</title>\n</head>\n<body>\n<p style=\"text-align: center; font-weight: bold;\"><?php _e('You Are Banned.', 'wp-ban'); ?></p>\n</body>\n</html>";
 				break;
 		}
-		document.getElementById("banned_template_" + template).value = default_template;
+		jQuery("#banned_template_" + template).val(default_template);
 	}
 	function toggle_checkbox() {
-		checkboxes =  document.getElementsByName('delete_ips[]');
-		total = checkboxes.length;
+		for(i = 0; i < <?php echo sizeof($banned_stats['users']); ?>; i++) {
+			if(checked == 0) {
+				jQuery("#ban-" + i).attr("checked", "checked");
+			} else {
+				jQuery("#ban-" + i).removeAttr("checked");
+			}
+		}
 		if(checked == 0) {
-			for (var i = 0; i < total; i++) {
-				checkboxes[i].checked = true;
-			}
-			checked++;
-		} else if(checked == 1) {
-			for (var i = 0; i < total; i++) {
-				checkboxes[i].checked = false;
-			}
-			checked--;
+			checked = 1;
+		} else {
+			checked = 0;
 		}
 	}
 	function preview_bannedmessage() {
@@ -275,13 +274,37 @@ switch($mode) {
 <div class="wrap">
 	<?php screen_icon(); ?>
 	<h2><?php _e('Ban Options', 'wp-ban'); ?></h2>
-	<table class="form-table">
+	<table class="widefat">
+		<thead>
+			<tr>
+				<th><?php _e('Your Details', 'wp-ban'); ?></th>
+				<th><?php _e('Value', 'wp-ban'); ?></th>
+			</tr>
+		</thead>
+		<tr>
+			<td><?php _e('IP', 'wp-ban'); ?>:</td>
+			<td><strong><?php echo get_IP(); ?></strong></td>
+		</tr>
+		<tr class="alternate">
+			<td><?php _e('Host Name', 'wp-ban'); ?>:</td>
+			<td><strong><?php echo @gethostbyaddr(get_IP()); ?></strong></td>
+		</tr>
+		<tr>
+			<td><?php _e('User Agent', 'wp-ban'); ?>:</td>
+			<td><strong><?php echo $_SERVER['HTTP_USER_AGENT']; ?></strong></td>
+		</tr>
+		<tr class="alternate">
+			<td><?php _e('Site URL', 'wp-ban'); ?>:</td>
+			<td><strong><?php echo get_option('siteurl'); ?></strong></td>
+		</tr>
 		<tr>
 			<td valign="top" colspan="2" align="center">
-				<?php printf(__('Your IP is: <strong>%s</strong><br />Your Host Name is: <strong>%s</strong><br />Your Site URL is: <strong>%s</strong>', 'wp-ban'), get_IP(), @gethostbyaddr(get_IP()), get_option('siteurl')); ?><br />
 				<?php _e('Please <strong>DO NOT</strong> ban yourself.', 'wp-ban'); ?>
 			</td>
 		</tr>
+	</table>
+	<p>&nbsp;</p>
+	<table class="form-table">
 		<tr>
 			<td valign="top">
 				<strong><?php _e('Banned IPs', 'wp-ban'); ?>:</strong><br />
