@@ -295,7 +295,7 @@ switch($mode) {
 		</tr>
 		<tr class="alternate">
 			<td><?php _e('Site URL', 'wp-ban'); ?>:</td>
-			<td><strong><?php echo get_option('siteurl'); ?></strong></td>
+			<td><strong><?php echo get_option('home'); ?></strong></td>
 		</tr>
 		<tr>
 			<td valign="top" colspan="2" align="center">
