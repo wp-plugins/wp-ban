@@ -270,7 +270,7 @@ switch($mode) {
 </script>
 <?php if(!empty($text)) { echo '<!-- Last Action --><div id="message" class="updated fade"><p>'.$text.'</p></div>'; } ?>
 <!-- Ban Options -->
-<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>">
 <div class="wrap">
 	<?php screen_icon(); ?>
 	<h2><?php _e('Ban Options', 'wp-ban'); ?></h2>
@@ -415,7 +415,7 @@ switch($mode) {
 </form>
 <p>&nbsp;</p>
 
-<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>">
 <div class="wrap">
 	<h3><?php _e('Ban Stats', 'wp-ban'); ?></h3>
 	<br style="clear" />
@@ -463,7 +463,7 @@ switch($mode) {
 <p>&nbsp;</p>
 
 <!-- Uninstall WP-Ban -->
-<form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"> 
+<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>">
 <div class="wrap"> 
 	<h3><?php _e('Uninstall WP-Ban', 'wp-ban'); ?></h3>
 	<p>
