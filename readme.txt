@@ -5,7 +5,7 @@ Tags: banned, ban, deny, denied, permission, ip, hostname, host, spam, bots, bot
 Requires at least: 2.8
 Stable tag: trunk
 
-Ban users by IP, IP Range, host name, user agent and referer url from visiting your WordPress's blog. It will display a custom ban message when the banned IP, IP range, host name, user agent or referer url tries to visit you blog. You can also exclude certain IPs from being banned. There will be statistics recordered on how many times they attemp to visit your blog. It allows wildcard matching too.
+Ban users by IP, IP Range, host name, user agent and referer url from visiting your WordPress's blog.
 
 == Description ==
 
