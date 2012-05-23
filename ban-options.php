@@ -2,8 +2,8 @@
 /*
 +----------------------------------------------------------------+
 |																							|
-|	WordPress 2.6 Plugin: WP-Ban 1.50											|
-|	Copyright (c) 2008 Lester "GaMerZ" Chan									|
+|	WordPress Plugin: WP-Ban											|
+|	Copyright (c) 2012 Lester "GaMerZ" Chan									|
 |																							|
 |	File Written By:																	|
 |	- Lester "GaMerZ" Chan															|
@@ -34,6 +34,7 @@ $ban_settings = array('banned_ips', 'banned_hosts', 'banned_stats', 'banned_mess
 ### Form Processing
 // Update Options
 if(!empty($_POST['Submit'])) {
+	check_admin_referer('wp-ban_templates');
 	$text = '';
 	$update_ban_queries = array();
 	$update_ban_text = array();	
@@ -133,6 +134,7 @@ if(!empty($_POST['do'])) {
 	switch($_POST['do']) {
 		// Credits To Joe (Ttech) - http://blog.fileville.net/
 		case __('Reset Ban Stats', 'wp-ban'):
+			check_admin_referer('wp-ban_stats');
 			if($_POST['reset_ban_stats'] == 'yes') {
 				$banned_stats = array('users' => array(), 'count' => 0);
 				update_option('banned_stats', $banned_stats);
@@ -149,6 +151,7 @@ if(!empty($_POST['do'])) {
 			break;
 		// Uninstall WP-Ban
 		case __('UNINSTALL WP-Ban', 'wp-ban') :
+			check_admin_referer('wp-ban_uninstall');
 			if(trim($_POST['uninstall_ban_yes']) == 'yes') {
 				echo '<div id="message" class="updated fade">';
 				echo '<p>';
@@ -244,7 +247,7 @@ switch($mode) {
 		var default_template;
 		switch(template) {
 			case "message":
-				default_template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" <?php echo str_replace('"', '\"', get_language_attributes()); ?>>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=<?php echo get_option('blog_charset'); ?>\" />\n<title>%SITE_NAME% - %SITE_URL%</title>\n</head>\n<body>\n<p style=\"text-align: center; font-weight: bold;\"><?php _e('You Are Banned.', 'wp-ban'); ?></p>\n</body>\n</html>";
+				default_template = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" <?php echo str_replace('"', '\"', get_language_attributes()); ?>>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=<?php echo get_option('blog_charset'); ?>\" />\n<title>%SITE_NAME% - %SITE_URL%</title>\n</head>\n<body>\n<div id=\"wp-ban-container\">\n<p style=\"text-align: center; font-weight: bold;\"><?php _e('You Are Banned.', 'wp-ban'); ?></p>\n</div>\n</body>\n</html>";
 				break;
 		}
 		jQuery("#banned_template_" + template).val(default_template);
@@ -263,14 +266,35 @@ switch($mode) {
 			checked = 0;
 		}
 	}
-	function preview_bannedmessage() {
-		window.open('<?php echo WP_PLUGIN_URL.'/wp-ban/ban-preview.php'; ?>');
-	}
+	jQuery(document).ready(function() {
+		jQuery('#show_button').click(function(event)
+		{
+			event.preventDefault();
+			var banned_template_message_el = jQuery('#banned_template_message');
+			if(jQuery(banned_template_message_el).is(':hidden'))
+			{
+				jQuery(this).val('<?php _e('Show Current Banned Message', 'wp-ban'); ?>');
+				jQuery('#banned_preview_message').empty();
+				jQuery(banned_template_message_el).fadeIn('fast');
+			}
+			else
+			{
+				jQuery(this).val('<?php _e('Show Banned Message Template', 'wp-ban'); ?>');
+				jQuery.ajax({type: 'GET', url: '<?php echo admin_url('admin-ajax.php'); ?>', data: 'action=ban-admin', cache: false, success: function(data) {
+					var html_message = data;
+					jQuery(banned_template_message_el).fadeOut('fast', function() {
+						jQuery(html_message).filter('#wp-ban-container').appendTo('#banned_preview_message');
+					});
+				}});
+			}
+		});
+	});
 /* ]]> */
 </script>
 <?php if(!empty($text)) { echo '<!-- Last Action --><div id="message" class="updated fade"><p>'.$text.'</p></div>'; } ?>
 <!-- Ban Options -->
 <form method="post" action="<?php echo admin_url('admin.php?page='.plugin_basename(__FILE__)); ?>">
+<?php wp_nonce_field('wp-ban_templates'); ?>
 <div class="wrap">
 	<?php screen_icon(); ?>
 	<h2><?php _e('Ban Options', 'wp-ban'); ?></h2>
@@ -397,25 +421,28 @@ switch($mode) {
 					<p style="margin: 2px 0">- %SITE_NAME%</p>
 					<p style="margin: 2px 0">- %SITE_URL%</p>
 					<p style="margin: 2px 0">- %USER_ATTEMPTS_COUNT%</p>
-					<p style="margin: 2px 0">- %USER_IP%<br />
-					<p style="margin: 2px 0">- %USER_HOSTNAME%<br />
+					<p style="margin: 2px 0">- %USER_IP%</p>
+					<p style="margin: 2px 0">- %USER_HOSTNAME%</p>
 					<p style="margin: 2px 0">- %TOTAL_ATTEMPTS_COUNT%</p><br />
+					<p><?php printf(__('Note: Your message must be within %s', 'wp-ban'), htmlspecialchars('<div id="wp-ban-container"></div>')); ?></p><br />
 					<input type="button" name="RestoreDefault" value="<?php _e('Restore Default Template', 'wp-ban'); ?>" onclick="banned_default_templates('message');" class="button" /><br /><br />
-					<input type="button" name="RestoreDefault" value="<?php _e('Preview Banned Message', 'wp-ban'); ?>" onclick="preview_bannedmessage();" class="button" /><br />
+					<input type="button" id="show_button" value="<?php _e('Show Current Banned Message', 'wp-ban'); ?>" class="button" /><br />
 			</td>
 			<td>
-				<textarea cols="60" rows="20" id="banned_template_message" name="banned_template_message"><?php echo stripslashes(get_option('banned_message')); ?></textarea>
+				<textarea cols="100" style="width: 100%;" rows="20" id="banned_template_message" name="banned_template_message"><?php echo stripslashes(get_option('banned_message')); ?></textarea>
+				<div id="banned_preview_message"></div>
 			</td>
 		</tr>
 	</table>
-	<p class="submit">
+	<p style="text-align: center;">
 		<input type="submit" name="Submit" class="button" value="<?php _e('Save Changes', 'wp-ban'); ?>" />
 	</p>
 </div>
 </form>
 <p>&nbsp;</p>
 
-<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>">
+<form method="post" action="<?php echo admin_url('admin.php?page='.plugin_basename(__FILE__)); ?>">
+<?php wp_nonce_field('wp-ban_stats'); ?>
 <div class="wrap">
 	<h3><?php _e('Ban Stats', 'wp-ban'); ?></h3>
 	<br style="clear" />
@@ -463,7 +490,8 @@ switch($mode) {
 <p>&nbsp;</p>
 
 <!-- Uninstall WP-Ban -->
-<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>">
+<form method="post" action="<?php echo admin_url('admin.php?page='.plugin_basename(__FILE__)); ?>">
+<?php wp_nonce_field('wp-ban_uninstall'); ?>
 <div class="wrap"> 
 	<h3><?php _e('Uninstall WP-Ban', 'wp-ban'); ?></h3>
 	<p>
