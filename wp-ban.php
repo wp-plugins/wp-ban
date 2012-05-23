@@ -139,12 +139,30 @@ function banned() {
 	if($ip == 'unknown') {
 		return;
 	}
-	$banned_ips = array_filter(get_option('banned_ips'));
-	$banned_ips_range = array_filter(get_option('banned_ips_range'));
-	$banned_hosts = array_filter(get_option('banned_hosts'));
-	$banned_referers = array_filter(get_option('banned_referers'));
-	$banned_user_agents = array_filter(get_option('banned_user_agents'));
-	$banned_exclude_ips = array_filter(get_option('banned_exclude_ips'));
+	$banned_ips = get_option('banned_ips');
+	if(is_array($banned_ips))
+		$banned_ips = array_filter($banned_ips);
+
+	$banned_ips_range = get_option('banned_ips_range');
+	if(is_array($banned_ips_range))
+		$banned_ips_range = array_filter($banned_ips_range);
+		
+	$banned_hosts = get_option('banned_hosts');
+	if(is_array($banned_hosts))
+		$banned_hosts = array_filter($banned_hosts);
+		
+	$banned_referers = get_option('banned_referers');
+	if(is_array($banned_referers))
+		$banned_referers = array_filter($banned_referers);
+		
+	$banned_user_agents = get_option('banned_user_agents');
+	if(is_array($banned_user_agents))
+		$banned_user_agents = array_filter($banned_user_agents);
+		
+	$banned_exclude_ips = get_option('banned_exclude_ips');
+	if(is_array($banned_exclude_ips))
+		$banned_exclude_ips = array_filter($banned_exclude_ips);
+		
 	$is_excluded = false;
 	if(!empty($banned_exclude_ips)) {
 		foreach($banned_exclude_ips as $banned_exclude_ip) {
