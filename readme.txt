@@ -35,12 +35,15 @@ It will display a custom ban message when the banned IP, IP range, host name or 
 
 == Changelog ==
 
-= Version 1.60 (23-05-2012) = 
+= Version 1.61 (11-03-2013) =
+* FIXED: Replace ereg() with preg_match()
+
+= Version 1.60 (23-05-2012) =
 * NEW: AJAX Preview Of Current Banned Message
 * NEW: Added nonce To Form
 * FIXED: Don't Process Ban If Any Of The Conditions Are Empty
 
-= Version 1.50 (01-06-2009) = 
+= Version 1.50 (01-06-2009) =
 * NEW: Added "Your User Agent" Details
 * NEW: Uses jQuery Framework
 * FIXED: Uses $_SERVER['PHP_SELF'] With plugin_basename(__FILE__) Instead Of Just $_SERVER['REQUEST_URI']
@@ -55,7 +58,7 @@ It will display a custom ban message when the banned IP, IP range, host name or 
 = Version 1.31 (16-07-2008) =
 * NEW: Works With WordPress 2.6
 * FIXED: Do Not Ban If IP is "unknown"
-				
+
 = Version 1.30 (01-06-2008) =
 * NEW: Uses /wp-ban/ Folder Instead Of /ban/
 * NEW: Uses wp-ban.php Instead Of ban.php
@@ -65,15 +68,15 @@ It will display a custom ban message when the banned IP, IP range, host name or 
 * FIXED: "unknown" IPs (By: Jorge Garcia de Bustos)
 
 = Version 1.20 (01-10-2007) =
-* NEW: Ability To Uninstall WP-Ban			
-* NEW: Moved Ban Options From ban.php To ban-options.php	
-				
+* NEW: Ability To Uninstall WP-Ban
+* NEW: Moved Ban Options From ban.php To ban-options.php
+
 = Version 1.11 (01-06-2007 =
 * NEW: Banned By Referer URL
 * NEW: Ability To Exclude Specific IPs From Being Banned
 * NEW: Added Template Variables For User Attempts Count And Total Attempts Count
-* FIXED: Suppress gethostbyaddr() Error						
-				
+* FIXED: Suppress gethostbyaddr() Error
+
 = Version 1.10 (01-02-2007) =
 * NEW: Works For WordPress 2.1 Only
 * NEW: Move ban.php To ban Folder
@@ -99,7 +102,7 @@ It will display a custom ban message when the banned IP, IP range, host name or 
 2. Open `wp-content/plugins` Folder
 3. Put/Overwrite: `Folder: wp-ban`
 4. Activate `WP-Ban` Plugin
-	
+
 == Upgrade Notice ==
 
 N/A
