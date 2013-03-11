@@ -3,14 +3,14 @@
 Plugin Name: WP-Ban
 Plugin URI: http://lesterchan.net/portfolio/programming/php/
 Description: Ban users by IP, IP Range, host name, user agent and referer url from visiting your WordPress's blog. It will display a custom ban message when the banned IP, IP range, host name, user agent or referer url tries to visit you blog. You can also exclude certain IPs from being banned. There will be statistics recordered on how many times they attemp to visit your blog. It allows wildcard matching too.
-Version: 1.60
+Version: 1.61
 Author: Lester 'GaMerZ' Chan
 Author URI: http://lesterchan.net
 */
 
 
-/*  
-	Copyright 2012  Lester Chan  (email : lesterchan@gmail.com)
+/*
+	Copyright 2013  Lester Chan  (email : lesterchan@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -76,9 +76,9 @@ function preview_banned_message()
 	$banned_message = str_replace("%USER_ATTEMPTS_COUNT%",  number_format_i18n($banned_stats['users'][get_IP()]), $banned_message);
 	$banned_message = str_replace("%USER_IP%", get_IP(), $banned_message);
 	$banned_message = str_replace("%USER_HOSTNAME%",  @gethostbyaddr(get_IP()), $banned_message);
-	$banned_message = str_replace("%TOTAL_ATTEMPTS_COUNT%", number_format_i18n($banned_stats['count']), $banned_message);				
+	$banned_message = str_replace("%TOTAL_ATTEMPTS_COUNT%", number_format_i18n($banned_stats['count']), $banned_message);
 	echo $banned_message;
-	exit(); 
+	exit();
 }
 
 
@@ -95,9 +95,9 @@ function print_banned_message() {
 	$banned_message = str_replace("%USER_ATTEMPTS_COUNT%",  number_format_i18n($banned_stats['users'][get_IP()]), $banned_message);
 	$banned_message = str_replace("%USER_IP%", get_IP(), $banned_message);
 	$banned_message = str_replace("%USER_HOSTNAME%",  @gethostbyaddr(get_IP()), $banned_message);
-	$banned_message = str_replace("%TOTAL_ATTEMPTS_COUNT%", number_format_i18n($banned_stats['count']), $banned_message);				
+	$banned_message = str_replace("%TOTAL_ATTEMPTS_COUNT%", number_format_i18n($banned_stats['count']), $banned_message);
 	echo $banned_message;
-	exit(); 
+	exit();
 }
 
 
@@ -107,7 +107,7 @@ function process_ban($banarray, $against)  {
 		foreach($banarray as $cban) {
 			$regexp = str_replace ('.', '\\.', $cban);
 			$regexp = str_replace ('*', '.+', $regexp);
-			if(ereg("^$regexp$", $against)) {
+			if(preg_match("/^$regexp$/", $against)) {
 				print_banned_message();
 			}
 		}
@@ -146,23 +146,23 @@ function banned() {
 	$banned_ips_range = get_option('banned_ips_range');
 	if(is_array($banned_ips_range))
 		$banned_ips_range = array_filter($banned_ips_range);
-		
+
 	$banned_hosts = get_option('banned_hosts');
 	if(is_array($banned_hosts))
 		$banned_hosts = array_filter($banned_hosts);
-		
+
 	$banned_referers = get_option('banned_referers');
 	if(is_array($banned_referers))
 		$banned_referers = array_filter($banned_referers);
-		
+
 	$banned_user_agents = get_option('banned_user_agents');
 	if(is_array($banned_user_agents))
 		$banned_user_agents = array_filter($banned_user_agents);
-		
+
 	$banned_exclude_ips = get_option('banned_exclude_ips');
 	if(is_array($banned_exclude_ips))
 		$banned_exclude_ips = array_filter($banned_exclude_ips);
-		
+
 	$is_excluded = false;
 	if(!empty($banned_exclude_ips)) {
 		foreach($banned_exclude_ips as $banned_exclude_ip) {
@@ -193,7 +193,7 @@ function is_admin_ip($check) {
 	$admin_ip = get_IP();
 	$regexp = str_replace ('.', '\\.', $check);
 	$regexp = str_replace ('*', '.+', $regexp);
-	if(ereg("^$regexp$", $admin_ip)) {
+	if(preg_match("/^$regexp$/", $admin_ip)) {
 		return true;
 	}
 	return false;
@@ -217,7 +217,7 @@ function is_admin_hostname($check) {
 	$admin_hostname = @gethostbyaddr(get_IP());
 	$regexp = str_replace ('.', '\\.', $check);
 	$regexp = str_replace ('*', '.+', $regexp);
-	if(ereg("^$regexp$", $admin_hostname)) {
+	if(preg_match("/^$regexp$/", $admin_hostname)) {
 		return true;
 	}
 	return false;
@@ -230,7 +230,7 @@ function is_admin_referer($check) {
 	$regexp = str_replace ('*', '.+', $regexp);
 	$url_patterns = array(get_option('siteurl'), get_option('home'), get_option('siteurl').'/', get_option('home').'/', get_option('siteurl').'/ ', get_option('home').'/ ', $_SERVER['HTTP_REFERER']);
 	foreach($url_patterns as $url) {
-		if(ereg("^$regexp$", $url)) {
+		if(preg_match("/^$regexp$/", $url)) {
 			return true;
 		}
 	}
@@ -242,7 +242,7 @@ function is_admin_referer($check) {
 function is_admin_user_agent($check) {
 	$regexp = str_replace ('.', '\\.', $check);
 	$regexp = str_replace ('*', '.+', $regexp);
-	return ereg("^$regexp$", $_SERVER['HTTP_USER_AGENT']);
+	return preg_match("/^$regexp$/", $_SERVER['HTTP_USER_AGENT']);
 }
 
 
