@@ -3,7 +3,7 @@
 Plugin Name: WP-Ban
 Plugin URI: http://lesterchan.net/portfolio/programming/php/
 Description: Ban users by IP, IP Range, host name, user agent and referer url from visiting your WordPress's blog. It will display a custom ban message when the banned IP, IP range, host name, user agent or referer url tries to visit you blog. You can also exclude certain IPs from being banned. There will be statistics recordered on how many times they attemp to visit your blog. It allows wildcard matching too.
-Version: 1.61
+Version: 1.62
 Author: Lester 'GaMerZ' Chan
 Author URI: http://lesterchan.net
 */
@@ -105,9 +105,7 @@ function print_banned_message() {
 function process_ban($banarray, $against)  {
 	if(!empty($banarray) && !empty($against)) {
 		foreach($banarray as $cban) {
-			$regexp = str_replace ('.', '\\.', $cban);
-			$regexp = str_replace ('*', '.+', $regexp);
-			if(preg_match("/^$regexp$/", $against)) {
+			if(preg_match_wildcard($cban, $against)) {
 				print_banned_message();
 			}
 		}
@@ -190,13 +188,7 @@ function banned() {
 
 ### Function: Check Whether Or Not The IP Address Belongs To Admin
 function is_admin_ip($check) {
-	$admin_ip = get_IP();
-	$regexp = str_replace ('.', '\\.', $check);
-	$regexp = str_replace ('*', '.+', $regexp);
-	if(preg_match("/^$regexp$/", $admin_ip)) {
-		return true;
-	}
-	return false;
+	return preg_match_wildcard($check, get_IP());
 }
 
 
@@ -214,23 +206,15 @@ function check_ip_within_range($ip, $range_start, $range_end) {
 
 ### Function: Check Whether Or Not The Hostname Belongs To Admin
 function is_admin_hostname($check) {
-	$admin_hostname = @gethostbyaddr(get_IP());
-	$regexp = str_replace ('.', '\\.', $check);
-	$regexp = str_replace ('*', '.+', $regexp);
-	if(preg_match("/^$regexp$/", $admin_hostname)) {
-		return true;
-	}
-	return false;
+	return preg_match_wildcard($check, @gethostbyaddr(get_IP()));
 }
 
 
 ### Function: Check Whether Or Not The Referer Belongs To This Site
 function is_admin_referer($check) {
-	$regexp = str_replace ('.', '\\.', $check);
-	$regexp = str_replace ('*', '.+', $regexp);
 	$url_patterns = array(get_option('siteurl'), get_option('home'), get_option('siteurl').'/', get_option('home').'/', get_option('siteurl').'/ ', get_option('home').'/ ', $_SERVER['HTTP_REFERER']);
 	foreach($url_patterns as $url) {
-		if(preg_match("/^$regexp$/", $url)) {
+		if(preg_match_wildcard($check, $url)) {
 			return true;
 		}
 	}
@@ -240,9 +224,7 @@ function is_admin_referer($check) {
 
 ### Function: Check Whether Or Not The User Agent Is Used by Admin
 function is_admin_user_agent($check) {
-	$regexp = str_replace ('.', '\\.', $check);
-	$regexp = str_replace ('*', '.+', $regexp);
-	return preg_match("/^$regexp$/", $_SERVER['HTTP_USER_AGENT']);
+	return preg_match_wildcard($check, $_SERVER['HTTP_USER_AGENT']);
 }
 
 
@@ -253,6 +235,21 @@ function get_language_attributes($doctype = 'html') {
 	$language_attributes = ob_get_contents();
 	ob_end_clean();
 	return $language_attributes;
+}
+
+
+### Function: Wildcard Check
+function preg_match_wildcard($regex, $subject) {
+	$regex = preg_quote($regex, '#');
+	$regex = str_replace('\*', '.*', $regex);
+	if(preg_match("#^$regex$#", $subject))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 

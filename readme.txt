@@ -35,6 +35,9 @@ It will display a custom ban message when the banned IP, IP range, host name or 
 
 == Changelog ==
 
+= Version 1.62 (12-03-2013) =
+* FIXED: Use a different modifier for preg_match() and use preg_quote() to escape regex
+
 = Version 1.61 (11-03-2013) =
 * FIXED: Replace ereg() with preg_match()
 
