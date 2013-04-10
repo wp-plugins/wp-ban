@@ -6,6 +6,7 @@ Description: Ban users by IP, IP Range, host name, user agent and referer url fr
 Version: 1.62
 Author: Lester 'GaMerZ' Chan
 Author URI: http://lesterchan.net
+Text Domain: wp-ban
 */
 
 
