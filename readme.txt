@@ -3,14 +3,16 @@ Contributors: GamerZ
 Donate link: http://lesterchan.net/site/donation/  
 Tags: banned, ban, deny, denied, permission, ip, hostname, host, spam, bots, bot, exclude, referrer, url, referral, range  
 Requires at least: 2.8  
-Tested up to: 3.9  
-Stable tag: trunk  
+Tested up to: 4.0  
+Stable tag: 1.63  
 
 Ban users by IP, IP Range, host name, user agent and referrer url from visiting your WordPress's blog.
 
 == Description ==
-
 It will display a custom ban message when the banned IP, IP range, host name or referrer url that tries to visit you blog. You can also exclude certain IPs from being banned. There will be statistics recorded on how many times they attempt to visit your blog. It allows wildcard matching too.
+
+= Build Status =
+[![Build Status](https://travis-ci.org/lesterchan/wp-ban.svg?branch=master)](https://travis-ci.org/lesterchan/wp-ban)
 
 = Development =
 * [https://github.com/lesterchan/wp-ban](https://github.com/lesterchan/wp-ban "https://github.com/lesterchan/wp-ban")
@@ -19,12 +21,15 @@ It will display a custom ban message when the banned IP, IP range, host name or 
 * [http://dev.wp-plugins.org/browser/wp-ban/i18n/](http://dev.wp-plugins.org/browser/wp-ban/i18n/ "http://dev.wp-plugins.org/browser/wp-ban/i18n/")
 
 = Credits =
-* Right To Left Language Support by [Kambiz R. Khojasteh](http://persian-programming.com/ "Kambiz R. Khojasteh")
+* Plugin icon by [Dave Gandy](http://fontawesome.io) from [Flaticon](http://www.flaticon.com)
 
 = Donations =
 * I spent most of my free time creating, updating, maintaining and supporting these plugins, if you really love my plugins and could spare me a couple of bucks, I will really appreciate it. If not feel free to use it without any obligations.
 
 == Changelog ==
+
+= Version 1.63 =
+* FIXED: Notices
 
 = Version 1.62 (12-03-2013) =
 * FIXED: Use a different modifier for preg_match() and use preg_quote() to escape regex
