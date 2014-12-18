@@ -4,14 +4,10 @@ if(!current_user_can('manage_options')) {
 	die('Access Denied');
 }
 
-
 ### Variables
 $base_name = plugin_basename('wp-ban/ban-options.php');
 $base_page = 'admin.php?page='.$base_name;
 $admin_login = trim($current_user->user_login);
-$mode = (isset($_GET['mode']) ? trim($_GET['mode']) : '');
-$ban_settings = array('banned_ips', 'banned_hosts', 'banned_stats', 'banned_message', 'banned_referers', 'banned_exclude_ips', 'banned_ips_range', 'banned_user_agents');
-
 
 ### Form Processing
 // Update Options
@@ -34,7 +30,7 @@ if(!empty($_POST['Submit'])) {
 		$banned_ips = array();
 		foreach($banned_ips_post as $banned_ip) {
 			if($admin_login == 'admin' && ($banned_ip == ban_get_ip() || is_admin_ip($banned_ip))) {
-				$text .= '<font color="blue">'.sprintf(__('This IP \'%s\' Belongs To The Admin And Will Not Be Added To Ban List', 'wp-ban'),$banned_ip).'</font><br />';
+				$text .= '<p style="color: blue;">'.sprintf(__('This IP \'%s\' Belongs To The Admin And Will Not Be Added To Ban List', 'wp-ban'),$banned_ip).'</p>';
 			} else {
 				$banned_ips[] = trim($banned_ip);
 			}
@@ -47,7 +43,7 @@ if(!empty($_POST['Submit'])) {
 			$range_start = trim($range[0]);
 			$range_end = trim($range[1]);
 			if($admin_login == 'admin' && (check_ip_within_range(ban_get_ip(), $range_start, $range_end))) {
-				$text .= '<font color="blue">'.sprintf(__('The Admin\'s IP \'%s\' Fall Within This Range (%s - %s) And Will Not Be Added To Ban List', 'wp-ban'), ban_get_ip(), $range_start, $range_end).'</font><br />';
+				$text .= '<p style="color: blue;">'.sprintf(__('The Admin\'s IP \'%s\' Fall Within This Range (%s - %s) And Will Not Be Added To Ban List', 'wp-ban'), ban_get_ip(), $range_start, $range_end).'</p>';
 			} else {
 				$banned_ips_range[] = trim($banned_ip_range);
 			}
@@ -57,7 +53,7 @@ if(!empty($_POST['Submit'])) {
 		$banned_hosts = array();
 		foreach($banned_hosts_post as $banned_host) {
 			if($admin_login == 'admin' && ($banned_host == @gethostbyaddr(ban_get_ip()) || is_admin_hostname($banned_host))) {
-				$text .= '<font color="blue">'.sprintf(__('This Hostname \'%s\' Belongs To The Admin And Will Not Be Added To Ban List', 'wp-ban'), $banned_host).'</font><br />';
+				$text .= '<p style="color: blue;">'.sprintf(__('This Hostname \'%s\' Belongs To The Admin And Will Not Be Added To Ban List', 'wp-ban'), $banned_host).'</p>';
 			} else {
 				$banned_hosts[] = trim($banned_host);
 			}
@@ -67,7 +63,7 @@ if(!empty($_POST['Submit'])) {
 		$banned_referers = array();
 		foreach($banned_referers_post as $banned_referer) {
 			if(is_admin_referer($banned_referer)) {
-				$text .= '<font color="blue">'.sprintf(__('This Referer \'%s\' Belongs To This Site And Will Not Be Added To Ban List', 'wp-ban'), $banned_referer).'</font><br />';
+				$text .= '<p style="color: blue;">'.sprintf(__('This Referer \'%s\' Belongs To This Site And Will Not Be Added To Ban List', 'wp-ban'), $banned_referer).'</p>';
 			} else {
 				$banned_referers[] = trim($banned_referer);
 			}
@@ -77,7 +73,7 @@ if(!empty($_POST['Submit'])) {
 		$banned_user_agents = array();
 		foreach($banned_user_agents_post as $banned_user_agent) {
 			if(is_admin_user_agent($banned_user_agent)) {
-				$text .= '<font color="blue">'.sprintf(__('This User Agent \'%s\' Is Used By The Current Admin And Will Not Be Added To Ban List', 'wp-ban'), $banned_user_agent).'</font><br />';
+				$text .= '<p style="color: blue;">'.sprintf(__('This User Agent \'%s\' Is Used By The Current Admin And Will Not Be Added To Ban List', 'wp-ban'), $banned_user_agent).'</p>';
 			} else {
 				$banned_user_agents[] = trim($banned_user_agent);
 			}
@@ -110,12 +106,12 @@ if(!empty($_POST['Submit'])) {
 	$i=0;
 	foreach($update_ban_queries as $update_ban_query) {
 		if($update_ban_query) {
-			$text .= '<font color="green">'.$update_ban_text[$i].' '.__('Updated', 'wp-ban').'</font><br />';
+			$text .= '<p style="color: green;">'.$update_ban_text[$i].' '.__('Updated', 'wp-ban').'</p>';
 		}
 		$i++;
 	}
 	if(empty($text)) {
-		$text = '<font color="red">'.__('No Ban Option Updated', 'wp-ban').'</font>';
+		$text = '<p style="color: red;">'.__('No Ban Option Updated', 'wp-ban').'</p>';
 	}
 }
 if(!empty($_POST['do'])) {
@@ -127,7 +123,7 @@ if(!empty($_POST['do'])) {
 			if($_POST['reset_ban_stats'] == 'yes') {
 				$banned_stats = array('users' => array(), 'count' => 0);
 				update_option('banned_stats', $banned_stats);
-				$text = '<font color="green">'.__('All IP Ban Stats And Total Ban Stat Reseted', 'wp-ban').'</font>';
+				$text = '<p style="color: green;">'.__('All IP Ban Stats And Total Ban Stat Reseted', 'wp-ban').'</p>';
 			} else {
 				$banned_stats = get_option('banned_stats');
 				$delete_ips = (array) $_POST['delete_ips'];
@@ -135,101 +131,62 @@ if(!empty($_POST['do'])) {
 					unset($banned_stats['users'][$delete_ip]);
 				}
 				update_option('banned_stats', $banned_stats);
-				$text = '<font color="green">'.__('Selected IP Ban Stats Reseted', 'wp-ban').'</font>';
-			}
-			break;
-		// Uninstall WP-Ban
-		case __('UNINSTALL WP-Ban', 'wp-ban') :
-			check_admin_referer('wp-ban_uninstall');
-			if(trim($_POST['uninstall_ban_yes']) == 'yes') {
-				echo '<div id="message" class="updated fade">';
-				echo '<p>';
-				foreach($ban_settings as $setting) {
-					$delete_setting = delete_option($setting);
-					if($delete_setting) {
-						echo '<font color="green">';
-						printf(__('Setting Key \'%s\' has been deleted.', 'wp-ban'), "<strong><em>{$setting}</em></strong>");
-						echo '</font><br />';
-					} else {
-						echo '<font color="red">';
-						printf(__('Error deleting Setting Key \'%s\'.', 'wp-ban'), "<strong><em>{$setting}</em></strong>");
-						echo '</font><br />';
-					}
-				}
-				echo '</p>';
-				echo '</div>';
-				$mode = 'end-UNINSTALL';
+				$text = '<p style="color: green;">'.__('Selected IP Ban Stats Reseted', 'wp-ban').'</p>';
 			}
 			break;
 	}
 }
 
-
-### Determines Which Mode It Is
-switch($mode) {
-		//  Deactivating WP-Ban
-		case 'end-UNINSTALL':
-			$deactivate_url = 'plugins.php?action=deactivate&amp;plugin=wp-ban/wp-ban.php';
-			if(function_exists('wp_nonce_url')) {
-				$deactivate_url = wp_nonce_url($deactivate_url, 'deactivate-plugin_wp-ban/wp-ban.php');
-			}
-			echo '<div class="wrap">';
-			echo '<h2>'.__('Uninstall WP-Ban', 'wp-ban').'</h2>';
-			echo '<p><strong>'.sprintf(__('<a href="%s">Click Here</a> To Finish The Uninstallation And WP-Ban Will Be Deactivated Automatically.', 'wp-ban'), $deactivate_url).'</strong></p>';
-			echo '</div>';
-			break;
-	// Main Page
-	default:
-		$banned_ips = get_option('banned_ips');
-		$banned_ips_range = get_option('banned_ips_range');
-		$banned_hosts = get_option('banned_hosts');
-		$banned_referers = get_option('banned_referers');
-		$banned_user_agents = get_option('banned_user_agents');
-		$banned_exclude_ips = get_option('banned_exclude_ips');
-		$banned_ips_display = '';
-		$banned_ips_range_display = '';
-		$banned_hosts_display = '';
-		$banned_referers_display = '';
-		$banned_user_agents_display = '';
-		$banned_exclude_ips_display = '';
-		if(!empty($banned_ips)) {
-			foreach($banned_ips as $banned_ip) {
-				$banned_ips_display .= $banned_ip."\n";
-			}
-		}
-		if(!empty($banned_ips_range)) {
-			foreach($banned_ips_range as $banned_ip_range) {
-				$banned_ips_range_display .= $banned_ip_range."\n";
-			}
-		}
-		if(!empty($banned_hosts)) {
-			foreach($banned_hosts as $banned_host) {
-				$banned_hosts_display .= $banned_host."\n";
-			}
-		}
-		if(!empty($banned_referers)) {
-			foreach($banned_referers as $banned_referer) {
-				$banned_referers_display .= $banned_referer."\n";
-			}
-		}
-		if(!empty($banned_user_agents)) {
-			foreach($banned_user_agents as $banned_user_agent) {
-				$banned_user_agents_display .= $banned_user_agent."\n";
-			}
-		}
-		if(!empty($banned_exclude_ips)) {
-			foreach($banned_exclude_ips as $banned_exclude_ip) {
-				$banned_exclude_ips_display .= $banned_exclude_ip."\n";
-			}
-		}
-		$banned_ips_display = trim($banned_ips_display);
-		$banned_ips_range_display = trim($banned_ips_range_display);
-		$banned_hosts_display = trim($banned_hosts_display);
-		$banned_referers_display = trim($banned_referers_display);
-		$banned_user_agents_display = trim($banned_user_agents_display);
-		$banned_exclude_ips_display = trim($banned_exclude_ips_display);
-		$banned_stats = get_option( 'banned_stats' );
-		$banned_options = get_option( 'banned_options' );
+$banned_ips = get_option('banned_ips');
+$banned_ips_range = get_option('banned_ips_range');
+$banned_hosts = get_option('banned_hosts');
+$banned_referers = get_option('banned_referers');
+$banned_user_agents = get_option('banned_user_agents');
+$banned_exclude_ips = get_option('banned_exclude_ips');
+$banned_ips_display = '';
+$banned_ips_range_display = '';
+$banned_hosts_display = '';
+$banned_referers_display = '';
+$banned_user_agents_display = '';
+$banned_exclude_ips_display = '';
+if(!empty($banned_ips)) {
+	foreach($banned_ips as $banned_ip) {
+		$banned_ips_display .= $banned_ip."\n";
+	}
+}
+if(!empty($banned_ips_range)) {
+	foreach($banned_ips_range as $banned_ip_range) {
+		$banned_ips_range_display .= $banned_ip_range."\n";
+	}
+}
+if(!empty($banned_hosts)) {
+	foreach($banned_hosts as $banned_host) {
+		$banned_hosts_display .= $banned_host."\n";
+	}
+}
+if(!empty($banned_referers)) {
+	foreach($banned_referers as $banned_referer) {
+		$banned_referers_display .= $banned_referer."\n";
+	}
+}
+if(!empty($banned_user_agents)) {
+	foreach($banned_user_agents as $banned_user_agent) {
+		$banned_user_agents_display .= $banned_user_agent."\n";
+	}
+}
+if(!empty($banned_exclude_ips)) {
+	foreach($banned_exclude_ips as $banned_exclude_ip) {
+		$banned_exclude_ips_display .= $banned_exclude_ip."\n";
+	}
+}
+$banned_ips_display = trim($banned_ips_display);
+$banned_ips_range_display = trim($banned_ips_range_display);
+$banned_hosts_display = trim($banned_hosts_display);
+$banned_referers_display = trim($banned_referers_display);
+$banned_user_agents_display = trim($banned_user_agents_display);
+$banned_exclude_ips_display = trim($banned_exclude_ips_display);
+$banned_stats = get_option( 'banned_stats' );
+$banned_options = get_option( 'banned_options' );
 ?>
 <script type="text/javascript">
 /* <![CDATA[*/
@@ -323,15 +280,15 @@ switch($mode) {
 		<tr>
 			<td width="40%" valign="top">
 				<strong><?php _e('Reverse Proxy Check', 'wp-ban'); ?>:</strong><br />
-				<?php _e( 'This will assume that incoming requests include the user\'s IP address in the HTTP_X_FORWARDED_FOR (and the request IP will be from your proxy).' ); ?>
+				<?php _e( 'This will assume that incoming requests include the user\'s IP address in the HTTP_X_FORWARDED_FOR (and the request IP will be from your proxy).', 'wp-ban' ); ?>
 			</td>
 			<td width="60%">
 				<label>
 					<input type="checkbox" name="banned_option_reverse_proxy" value="1"<?php echo ( intval( $banned_options['reverse_proxy'] ) === 1 ) ? ' checked="checked"' : ''; ?> />
-					<?php _e( 'I am using a reverse proxy.' ); ?>
+					<?php _e( 'I am using a reverse proxy.', 'wp-ban' ); ?>
 				</label>
 				<p>
-					<?php _e( 'If you\'re not sure, leave this uncheck. Ticking this box when you don\'t have a reverse proxy will make it easy to bypass the IP ban.' ); ?>
+					<?php _e( 'If you\'re not sure, leave this uncheck. Ticking this box when you don\'t have a reverse proxy will make it easy to bypass the IP ban.', 'wp-ban' ); ?>
 				</p>
 			</td>
 		</tr>
@@ -494,47 +451,3 @@ switch($mode) {
 </div>
 </form>
 <p>&nbsp;</p>
-
-<!-- Uninstall WP-Ban -->
-<form method="post" action="<?php echo admin_url('admin.php?page='.plugin_basename(__FILE__)); ?>">
-<?php wp_nonce_field('wp-ban_uninstall'); ?>
-<div class="wrap">
-	<h3><?php _e('Uninstall WP-Ban', 'wp-ban'); ?></h3>
-	<p>
-		<?php _e('Deactivating WP-Ban plugin does not remove any data that may have been created, such as the ban options. To completely remove this plugin, you can uninstall it here.', 'wp-ban'); ?>
-	</p>
-	<p style="color: red">
-		<strong><?php _e('WARNING:', 'wp-ban'); ?></strong><br />
-		<?php _e('Once uninstalled, this cannot be undone. You should use a Database Backup plugin of WordPress to back up all the data first.', 'wp-ban'); ?>
-	</p>
-	<p style="color: red">
-		<strong><?php _e('The following WordPress Options will be DELETED:', 'wp-ban'); ?></strong><br />
-	</p>
-	<table class="widefat">
-		<thead>
-			<tr>
-				<th><?php _e('WordPress Options', 'wp-ban'); ?></th>
-			</tr>
-		</thead>
-		<tr>
-			<td valign="top">
-				<ol>
-				<?php
-					foreach($ban_settings as $settings) {
-						echo '<li>'.$settings.'</li>'."\n";
-					}
-				?>
-				</ol>
-			</td>
-		</tr>
-	</table>
-	<p>&nbsp;</p>
-	<p style="text-align: center;">
-		<input type="checkbox" name="uninstall_ban_yes" value="yes" />&nbsp;<?php _e('Yes', 'wp-ban'); ?><br /><br />
-		<input type="submit" name="do" value="<?php _e('UNINSTALL WP-Ban', 'wp-ban'); ?>" class="button" onclick="return confirm('<?php _e('You Are About To Uninstall WP-Ban From WordPress.\nThis Action Is Not Reversible.\n\n Choose [Cancel] To Stop, [OK] To Uninstall.', 'wp-ban'); ?>')" />
-	</p>
-</div>
-</form>
-<?php
-} // End switch($mode)
-?>
